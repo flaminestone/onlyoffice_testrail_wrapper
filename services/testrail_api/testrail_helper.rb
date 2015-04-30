@@ -1,9 +1,6 @@
 # encoding: utf-8
 
 require_relative 'testrail'
-require_relative '../../Helpers/LoggerHelper'
-require_relative '../../Helpers/BugzillaHelper'
-require_relative '../../Helpers/RspecExtension'
 
 # noinspection RubyTooManyInstanceVariablesInspection
 class TestrailHelper
