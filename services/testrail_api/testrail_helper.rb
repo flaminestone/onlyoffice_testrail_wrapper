@@ -13,6 +13,7 @@ class TestrailHelper
     @in_debug = RspecHelper.debug?
     if @in_debug
       LoggerHelper.print_to_log 'Do not initialize Testrail, because spec run in debug'
+      @run = TestrailRun.new
       return
     end
     LoggerHelper.print_to_log 'Begin initializing Testrail...'
