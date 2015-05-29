@@ -59,7 +59,7 @@ class TestrailHelper
         comment += "\nTest ignored by #{ ignored_hash }"
         result = :blocked
       when example.pending
-        result, comment = parse_pending_comment(example.execution_result[:pending_message])
+        result, comment = parse_pending_comment(example.execution_result.pending_message)
         example.set_custom_exception(comment) if result == :failed
       when exception.to_s.include?('got:'), exception.to_s.include?('expected:')
         result = :failed
