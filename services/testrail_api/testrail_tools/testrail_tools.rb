@@ -29,6 +29,11 @@ module TestrailTools
     @testrail_config
   end
 
+  def self.get_all_runs_younger_than(time)
+    check_config(__method__, :@project)
+    project.get_runs(is_completed: 0).reject { |e| e['is_completed'] || e['created_on'] < time.to_i }
+  end
+
   def self.close_all_runs_older_than(time)
     check_config(__method__, :@project)
     loop do
