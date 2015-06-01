@@ -31,7 +31,11 @@ module TestrailTools
 
   def self.close_all_runs_older_than(time)
     check_config(__method__, :@project)
-    project.get_runs(is_completed: 0).reject { |e| e['is_completed'] || e['created_on'] > time.to_i }.each { |run| Testrail2.http_post('index.php?/api/v2/close_run/' + run['id'].to_s, {}) }
+    loop do
+      old_runs = project.get_runs(is_completed: 0).reject { |e| e['is_completed'] || e['created_on'] > time.to_i }
+      return if old_runs.empty?
+      old_runs.each { |run| Testrail2.http_post('index.php?/api/v2/close_run/' + run['id'].to_s, {}) }
+    end
   end
 
   def self.close_all_plans_older_than(time)
