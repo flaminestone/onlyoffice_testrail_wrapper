@@ -70,6 +70,9 @@ class TestrailHelper
       when exception.to_s.include?('Service Unavailable')
         result = :service_unavailable
         comment += "\n" + exception.to_s
+      when exception.to_s.include?('Limited program version')
+        result = :lpv
+        comment += "\n" + exception.to_s
       when exception.nil?
         case
           when @last_case == example.description
