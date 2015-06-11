@@ -55,40 +55,40 @@ class TestrailHelper
     custom_fields = {}
     custom_fields.merge!(custom_js_error: WebDriver.web_console_error) unless WebDriver.web_console_error.nil?
     case
-      when @ignore_parameters && (ignored_hash = ignore_case?(example.metadata))
-        comment += "\nTest ignored by #{ignored_hash}"
-        result = :blocked
-      when example.pending
-        result, comment = parse_pending_comment(example.execution_result.pending_message)
-        example.set_custom_exception(comment) if result == :failed
-      when exception.to_s.include?('got:'), exception.to_s.include?('expected:')
-        result = :failed
-        comment += "\n" + exception.to_s.gsub('got:', "got:\n").gsub('expected:', "expected:\n")
-      when exception.to_s.include?('to return'), exception.to_s.include?('expected')
-        result = :failed
-        comment += "\n" + exception.to_s.gsub('to return ', "to return:\n").gsub(', got ', "\ngot:\n")
-      when exception.to_s.include?('Service Unavailable')
-        result = :service_unavailable
-        comment += "\n" + exception.to_s
-      when exception.to_s.include?('Limited program version')
-        result = :lpv
-        comment += "\n" + exception.to_s
-      when exception.nil?
-        case
-          when @last_case == example.description
-            result = :passed_2
-          when custom_fields.key?(:custom_js_error)
-            result = :js_error
-          else
-            result = :passed
-        end
-        comment += "\nOk"
+    when @ignore_parameters && (ignored_hash = ignore_case?(example.metadata))
+      comment += "\nTest ignored by #{ignored_hash}"
+      result = :blocked
+    when example.pending
+      result, comment = parse_pending_comment(example.execution_result.pending_message)
+      example.set_custom_exception(comment) if result == :failed
+    when exception.to_s.include?('got:'), exception.to_s.include?('expected:')
+      result = :failed
+      comment += "\n" + exception.to_s.gsub('got:', "got:\n").gsub('expected:', "expected:\n")
+    when exception.to_s.include?('to return'), exception.to_s.include?('expected')
+      result = :failed
+      comment += "\n" + exception.to_s.gsub('to return ', "to return:\n").gsub(', got ', "\ngot:\n")
+    when exception.to_s.include?('Service Unavailable')
+      result = :service_unavailable
+      comment += "\n" + exception.to_s
+    when exception.to_s.include?('Limited program version')
+      result = :lpv
+      comment += "\n" + exception.to_s
+    when exception.nil?
+      case
+      when @last_case == example.description
+        result = :passed_2
+      when custom_fields.key?(:custom_js_error)
+        result = :js_error
       else
-        result = :aborted
-        comment += "\n" + exception.to_s
-        lines = StringHelper.get_string_elements_from_array(exception.backtrace, 'RubymineProjects')
-        lines.each_with_index { |e, i| lines[i] = e.to_s.sub(/.*RubymineProjects\//, '').gsub('`', " '") }
-        custom_fields.merge!(custom_autotest_error_line: lines.join("\r\n"))
+        result = :passed
+      end
+      comment += "\nOk"
+    else
+      result = :aborted
+      comment += "\n" + exception.to_s
+      lines = StringHelper.get_string_elements_from_array(exception.backtrace, 'RubymineProjects')
+      lines.each_with_index { |e, i| lines[i] = e.to_s.sub(/.*RubymineProjects\//, '').gsub('`', " '") }
+      custom_fields.merge!(custom_autotest_error_line: lines.join("\r\n"))
     end
     @last_case = example.description
     @suite.section(section_name).case(example.description).add_result @run.id, result, comment, custom_fields
