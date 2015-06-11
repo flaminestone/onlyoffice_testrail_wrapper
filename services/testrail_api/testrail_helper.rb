@@ -56,7 +56,7 @@ class TestrailHelper
     custom_fields.merge!(custom_js_error: WebDriver.web_console_error) unless WebDriver.web_console_error.nil?
     case
       when @ignore_parameters && (ignored_hash = ignore_case?(example.metadata))
-        comment += "\nTest ignored by #{ ignored_hash }"
+        comment += "\nTest ignored by #{ignored_hash}"
         result = :blocked
       when example.pending
         result, comment = parse_pending_comment(example.execution_result.pending_message)
