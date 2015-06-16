@@ -71,12 +71,12 @@ class Testrail2
 
   def project(name_or_id)
     case name_or_id.class.to_s
-      when 'Fixnum'
-        get_project_by_id name_or_id
-      when 'String'
-        init_project_by_name name_or_id
-      else
-        fail 'Wrong argument. Must be name [String] or id [Integer]'
+    when 'Fixnum'
+      get_project_by_id name_or_id
+    when 'String'
+      init_project_by_name name_or_id
+    else
+      fail 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 

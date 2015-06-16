@@ -66,12 +66,12 @@ class TestrailProject
 
   def suite(name_or_id)
     case name_or_id.class.to_s
-      when 'Fixnum'
-        get_suite_by_id name_or_id
-      when 'String'
-        init_suite_by_name name_or_id
-      else
-        fail 'Wrong argument. Must be name [String] or id [Integer]'
+    when 'Fixnum'
+      get_suite_by_id name_or_id
+    when 'String'
+      init_suite_by_name name_or_id
+    else
+      fail 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 
@@ -124,12 +124,12 @@ class TestrailProject
 
   def test_run(name_or_id)
     case name_or_id.class.to_s
-      when 'Fixnum'
-        get_run_by_id name_or_id
-      when 'String'
-        init_run_by_name name_or_id
-      else
-        fail 'Wrong argument. Must be name [String] or id [Integer]'
+    when 'Fixnum'
+      get_run_by_id name_or_id
+    when 'String'
+      init_run_by_name name_or_id
+    else
+      fail 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 
@@ -178,12 +178,12 @@ class TestrailProject
 
   def plan(name_or_id)
     case name_or_id.class.to_s
-      when 'Fixnum'
-        get_plan_by_id name_or_id
-      when 'String'
-        init_plan_by_name name_or_id
-      else
-        fail 'Wrong argument. Must be name [String] or id [Integer]'
+    when 'Fixnum'
+      get_plan_by_id name_or_id
+    when 'String'
+      init_plan_by_name name_or_id
+    else
+      fail 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 
@@ -236,12 +236,12 @@ class TestrailProject
 
   def milestone(name_or_id)
     case name_or_id.class.to_s
-      when 'Fixnum'
-        get_milestone_by_id name_or_id
-      when 'String'
-        init_milestone_by_name name_or_id
-      else
-        fail 'Wrong argument. Must be name [String] or id [Integer]'
+    when 'Fixnum'
+      get_milestone_by_id name_or_id
+    when 'String'
+      init_milestone_by_name name_or_id
+    else
+      fail 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 

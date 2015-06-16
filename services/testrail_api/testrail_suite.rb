@@ -42,12 +42,12 @@ class TestrailSuite
 
   def section(name_or_id = 'All Test Cases')
     case name_or_id.class.to_s
-      when 'Fixnum'
-        get_section_by_id name_or_id
-      when 'String'
-        init_section_by_name name_or_id
-      else
-        fail 'Wrong argument. Must be name [String] or id [Integer]'
+    when 'Fixnum'
+      get_section_by_id name_or_id
+    when 'String'
+      init_section_by_name name_or_id
+    else
+      fail 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 
