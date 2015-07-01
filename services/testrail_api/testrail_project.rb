@@ -33,7 +33,6 @@ class TestrailProject
   # @param [String] name name of project, default = nil
   # @param [String] announcement announcement of project, default = nil
   # @param [true, false] is_completed, is project completed, default = nil
-  # @param [String] completed_on, date, when project completed
   # @return [TestRunTestRail] new Test run
   def initialize(name = '', announcement = nil, show_announcement = true, is_completed = false, id = nil)
     @id = id.to_i

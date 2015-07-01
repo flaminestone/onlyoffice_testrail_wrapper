@@ -41,8 +41,6 @@ class TestrailRun
   # @param [Integer] id id of test, default = nil
   # @param [String] name name of test run, default = nil
   # @param [String] description description of test run
-  # @param [Integer] milestone_id id of milestone to which assigned test run
-  # @param [Integer] assignedto_id id of user to which test run assigned
   # @return [TestRunTestRail] new Test run
   def initialize(name = '', description = '', suite_id = nil, id = nil)
     @id = id
@@ -51,10 +49,6 @@ class TestrailRun
     @suite_id = suite_id
     @tests_names = {}
     @test_results = []
-    # @milestone_id = milestone_id
-    # @assignedto_id = assignedto_id
-    # @include_all_cases = include_all_cases
-    # @cases_ids = cases_ids
   end
 
   # Get all incomplete test (With status 'Untested' or 'Rerun')
