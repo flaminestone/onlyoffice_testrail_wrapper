@@ -125,7 +125,7 @@ class Testrail2
     request.basic_auth ADMIN_USER, ADMIN_PASS
     request.delete 'content-type'
     request.add_field 'content-type', 'application/json'
-    Net::HTTP.start(uri.host, uri.port)  do |http|
+    Net::HTTP.start(uri.host, uri.port) do |http|
       attempts = 0
       begin
         response = http.request(request)
