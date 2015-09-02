@@ -38,7 +38,11 @@ class TestrailHelper
   end
 
   def add_cases_to_suite(cases, section_name = 'All Test Cases')
-    LoggerHelper.print_to_log 'Begin scanning ' + @suite.name + ' suite for new cases'
+    if @in_debug
+      LoggerHelper.print_to_log 'Do not add test result, because spec run in debug '
+      return
+    end
+    LoggerHelper.print_to_log 'Begin scanning ' + @suite.name + ' suite for new cases' unless cases.is_a?(Array)
     section = @suite.section section_name.to_s
     existing_cases = section.get_cases.map { |test_case| test_case['title'] }
     cases.each { |case_name| section.create_new_case case_name.to_s unless existing_cases.include?(case_name) }
