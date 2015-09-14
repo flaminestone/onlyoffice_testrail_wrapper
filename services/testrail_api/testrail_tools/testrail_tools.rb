@@ -45,7 +45,11 @@ module TestrailTools
 
   def self.close_all_plans_older_than(time)
     check_config(__method__, :@project)
-    project.get_plans.reject { |e| e['is_completed'] || e['created_on'] > time.to_i }.each { |plan| Testrail2.http_post('index.php?/api/v2/close_plan/' + plan['id'].to_s, {}) }
+    loop do
+      old_plans = project.get_plans.reject { |e| e['is_completed'] || e['created_on'] > time.to_i }
+      return if old_plans.empty?
+      old_plans.each { |run| Testrail2.http_post('index.php?/api/v2/close_plan/' + run['id'].to_s, {}) }
+    end
   end
 
   def self.close_run
