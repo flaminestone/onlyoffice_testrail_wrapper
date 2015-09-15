@@ -19,7 +19,7 @@ class TestrailHelper
     LoggerHelper.print_to_log 'Begin initializing Testrail...'
     @suites_to_add = []
     @add_all_suites = true
-    @search_plan_by_substring = true
+    @search_plan_by_substring = false
     yield(self) if block_given?
     @project = Testrail2.new.project project_name.to_s
     if plan_name
