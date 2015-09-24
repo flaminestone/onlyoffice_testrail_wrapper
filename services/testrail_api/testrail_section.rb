@@ -34,6 +34,10 @@ class TestrailSection
     when 'Fixnum'
       get_case_by_id name_or_id
     when 'String'
+      if name_or_id.to_s.length > 250
+        LoggerHelper.print_to_log("There is limit for testcase name for 250 symbols. '#{name_or_id}' too long. It will cut")
+        name_or_id = name_or_id.to_s[0..249]
+      end
       init_case_by_name name_or_id
     else
       fail 'Wrong argument. Must be name [String] or id [Integer]'
