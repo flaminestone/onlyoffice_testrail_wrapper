@@ -30,9 +30,9 @@ class Testrail2
   @testrail_url = 'http://tm-testrail.no-ip.org/testrail/'
 
   # @return [String] login for admin user
-  @admin_user = 'pavel.lobashov@avsmedia.net'
+  @admin_user = nil
   # @return [String] password for admin user
-  @admin_pass = '123456'
+  @admin_pass = nil
 
   attr_accessor :projects_names
 
@@ -44,6 +44,26 @@ class Testrail2
     attr_accessor :testrail_url
     attr_accessor :admin_user
     attr_accessor :admin_pass
+
+    def read_keys
+      return unless @admin_user.nil? && @admin_pass.nil?
+      begin
+        @admin_user = File.read(Dir.home + '/.testrail/user').delete("\n")
+        @admin_pass = File.read(Dir.home + '/.testrail/password').delete("\n")
+      rescue Errno::ENOENT
+        raise Errno::ENOENT, "No user of passwords found in #{Dir.home}/.testrail/ directory. Please create files #{Dir.home}/.testrail/user and #{Dir.home}/.testrail/password"
+      end
+    end
+
+    def admin_user
+      read_keys
+      @admin_user
+    end
+
+    def admin_pass
+      read_keys
+      @admin_pass
+    end
 
     def get_testrail_address
       testrail_url
@@ -137,7 +157,7 @@ class Testrail2
   # endregion
 
   def self.send_request(uri, request)
-    request.basic_auth @admin_user, @admin_pass
+    request.basic_auth admin_user, admin_pass
     request.delete 'content-type'
     request.add_field 'content-type', 'application/json'
     Net::HTTP.start(uri.host, uri.port) do |http|
