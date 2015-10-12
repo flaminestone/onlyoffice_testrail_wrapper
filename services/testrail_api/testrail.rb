@@ -119,6 +119,15 @@ class Testrail2
     @projects_names[name.to_s.warnstrip!].nil? ? nil : get_project_by_id(@projects_names[name.to_s.warnstrip!])
   end
 
+  # Check if Testrail connection is available
+  # @return [True, False] result of test connection
+  def available?
+    get_projects
+    true
+  rescue
+    false
+  end
+
   # endregion
 
   def self.send_request(uri, request)
