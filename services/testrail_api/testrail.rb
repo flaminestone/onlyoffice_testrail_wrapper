@@ -27,7 +27,7 @@ require_relative 'testrail_project'
 class Testrail2
   # @return [String] address of testrail
   # TESTRAIL_DIGITALOCEAN = 'http://107.170.125.157/testrail/'
-  TESTRAIL_DIGITALOCEAN = 'http://tm-testrail.no-ip.org/testrail/'
+  @testrail_url = 'http://tm-testrail.no-ip.org/testrail/'
 
   # @return [String] login for admin user
   ADMIN_USER = 'pavel.lobashov@avsmedia.net'
@@ -40,31 +40,35 @@ class Testrail2
     @projects_names = {}
   end
 
-  def self.get_testrail_address
-    TESTRAIL_DIGITALOCEAN
-  end
+  class << self
+    attr_accessor :testrail_url
 
-  # Perform http get on address
-  # @param [String] request_url to perform http get
-  # @return [Hash] Json with result data in hash form
-  def self.http_get(request_url)
-    uri = URI get_testrail_address + request_url
-    request = Net::HTTP::Get.new uri.request_uri
-    response = send_request(uri, request)
-    JSON.parse response.body
-  end
+    def get_testrail_address
+      testrail_url
+    end
 
-  # Perform http post on address
-  # @param [String] request_url to perform http get
-  # @param [Hash] data_hash headers to add to post query
-  # @return [Hash] Json with result data in hash form
-  def self.http_post(request_url, data_hash)
-    uri = URI get_testrail_address + request_url
-    request = Net::HTTP::Post.new uri.request_uri
-    request.body = data_hash.to_json
-    response = send_request(uri, request)
-    return if response.body == ''
-    JSON.parse response.body
+    # Perform http get on address
+    # @param [String] request_url to perform http get
+    # @return [Hash] Json with result data in hash form
+    def http_get(request_url)
+      uri = URI get_testrail_address + request_url
+      request = Net::HTTP::Get.new uri.request_uri
+      response = send_request(uri, request)
+      JSON.parse response.body
+    end
+
+    # Perform http post on address
+    # @param [String] request_url to perform http get
+    # @param [Hash] data_hash headers to add to post query
+    # @return [Hash] Json with result data in hash form
+    def http_post(request_url, data_hash)
+      uri = URI get_testrail_address + request_url
+      request = Net::HTTP::Post.new uri.request_uri
+      request.body = data_hash.to_json
+      response = send_request(uri, request)
+      return if response.body == ''
+      JSON.parse response.body
+    end
   end
 
   # region PROJECT
