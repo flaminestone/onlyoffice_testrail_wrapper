@@ -30,9 +30,9 @@ class Testrail2
   @testrail_url = 'http://tm-testrail.no-ip.org/testrail/'
 
   # @return [String] login for admin user
-  ADMIN_USER = 'pavel.lobashov@avsmedia.net'
+  @admin_user = 'pavel.lobashov@avsmedia.net'
   # @return [String] password for admin user
-  ADMIN_PASS = '123456'
+  @admin_pass = '123456'
 
   attr_accessor :projects_names
 
@@ -42,6 +42,8 @@ class Testrail2
 
   class << self
     attr_accessor :testrail_url
+    attr_accessor :admin_user
+    attr_accessor :admin_pass
 
     def get_testrail_address
       testrail_url
@@ -135,7 +137,7 @@ class Testrail2
   # endregion
 
   def self.send_request(uri, request)
-    request.basic_auth ADMIN_USER, ADMIN_PASS
+    request.basic_auth @admin_user, @admin_pass
     request.delete 'content-type'
     request.add_field 'content-type', 'application/json'
     Net::HTTP.start(uri.host, uri.port) do |http|
