@@ -27,12 +27,12 @@ require_relative 'testrail_project'
 class Testrail2
   # @return [String] address of testrail
   # TESTRAIL_DIGITALOCEAN = 'http://107.170.125.157/testrail/'
-  TESTRAIL_DIGITALOCEAN = 'http://tm-testrail.no-ip.org/testrail/'
+  @testrail_url = 'http://tm-testrail.no-ip.org/testrail/'
 
   # @return [String] login for admin user
-  ADMIN_USER = 'pavel.lobashov@avsmedia.net'
+  @admin_user = nil
   # @return [String] password for admin user
-  ADMIN_PASS = '123456'
+  @admin_pass = nil
 
   attr_accessor :projects_names
 
@@ -40,31 +40,57 @@ class Testrail2
     @projects_names = {}
   end
 
-  def self.get_testrail_address
-    TESTRAIL_DIGITALOCEAN
-  end
+  class << self
+    attr_accessor :testrail_url
+    attr_accessor :admin_user
+    attr_accessor :admin_pass
 
-  # Perform http get on address
-  # @param [String] request_url to perform http get
-  # @return [Hash] Json with result data in hash form
-  def self.http_get(request_url)
-    uri = URI get_testrail_address + request_url
-    request = Net::HTTP::Get.new uri.request_uri
-    response = send_request(uri, request)
-    JSON.parse response.body
-  end
+    def read_keys
+      return unless @admin_user.nil? && @admin_pass.nil?
+      begin
+        @admin_user = File.read(Dir.home + '/.testrail/user').delete("\n")
+        @admin_pass = File.read(Dir.home + '/.testrail/password').delete("\n")
+      rescue Errno::ENOENT
+        raise Errno::ENOENT, "No user of passwords found in #{Dir.home}/.testrail/ directory. Please create files #{Dir.home}/.testrail/user and #{Dir.home}/.testrail/password"
+      end
+    end
 
-  # Perform http post on address
-  # @param [String] request_url to perform http get
-  # @param [Hash] data_hash headers to add to post query
-  # @return [Hash] Json with result data in hash form
-  def self.http_post(request_url, data_hash)
-    uri = URI get_testrail_address + request_url
-    request = Net::HTTP::Post.new uri.request_uri
-    request.body = data_hash.to_json
-    response = send_request(uri, request)
-    return if response.body == ''
-    JSON.parse response.body
+    def admin_user
+      read_keys
+      @admin_user
+    end
+
+    def admin_pass
+      read_keys
+      @admin_pass
+    end
+
+    def get_testrail_address
+      testrail_url
+    end
+
+    # Perform http get on address
+    # @param [String] request_url to perform http get
+    # @return [Hash] Json with result data in hash form
+    def http_get(request_url)
+      uri = URI get_testrail_address + request_url
+      request = Net::HTTP::Get.new uri.request_uri
+      response = send_request(uri, request)
+      JSON.parse response.body
+    end
+
+    # Perform http post on address
+    # @param [String] request_url to perform http get
+    # @param [Hash] data_hash headers to add to post query
+    # @return [Hash] Json with result data in hash form
+    def http_post(request_url, data_hash)
+      uri = URI get_testrail_address + request_url
+      request = Net::HTTP::Post.new uri.request_uri
+      request.body = data_hash.to_json
+      response = send_request(uri, request)
+      return if response.body == ''
+      JSON.parse response.body
+    end
   end
 
   # region PROJECT
@@ -119,10 +145,19 @@ class Testrail2
     @projects_names[name.to_s.warnstrip!].nil? ? nil : get_project_by_id(@projects_names[name.to_s.warnstrip!])
   end
 
+  # Check if Testrail connection is available
+  # @return [True, False] result of test connection
+  def available?
+    get_projects
+    true
+  rescue
+    false
+  end
+
   # endregion
 
   def self.send_request(uri, request)
-    request.basic_auth ADMIN_USER, ADMIN_PASS
+    request.basic_auth admin_user, admin_pass
     request.delete 'content-type'
     request.add_field 'content-type', 'application/json'
     Net::HTTP.start(uri.host, uri.port) do |http|
