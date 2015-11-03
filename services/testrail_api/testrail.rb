@@ -1,7 +1,7 @@
 # encoding: utf-8
 # @author Roman.Zagudaev
+# lib for working with http queries
 
-# @return lib for working with http queries
 require 'net/http'
 require 'json'
 require 'net/ping'
