@@ -12,4 +12,11 @@ describe Testrail2 do
       expect(Testrail2.new).not_to be_available
     end
   end
+
+  describe 'Tesrail Run' do
+    it 'TestrailProject.plan' do
+      project = Testrail2.new.project('Canvas Document Editor Autotests')
+      expect(project.plan('ver. 3.5.0 (build:199, rev:65637)')).to be_a(TestrailPlan)
+    end
+  end
 end
