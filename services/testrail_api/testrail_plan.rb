@@ -56,4 +56,14 @@ class TestrailPlan
     end
     run_results
   end
+
+  # Get run from plan
+  # @param run_name [String] run to find
+  # @return TestrailRun
+  def run(run_name)
+    @entries.each do |entry|
+      run = entry.runs.first
+      return run if run.name == run_name
+    end
+  end
 end
