@@ -66,4 +66,14 @@ class TestrailPlan
       return run if run.name == run_name
     end
   end
+
+  # Get all runs in current plan
+  # @return [Array, TestrailRuns]
+  def runs
+    runs = []
+    @entries.each do |entry|
+      runs << entry.runs.first
+    end
+    runs
+  end
 end
