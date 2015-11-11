@@ -15,6 +15,8 @@ class TestrailResult
   attr_accessor :comment
   # @return [String] Version
   attr_accessor :version
+  # @return [Integer] date of creation of result from begging of era
+  attr_accessor :created_on
   attr_reader :test_id
 
   # Default constructor
