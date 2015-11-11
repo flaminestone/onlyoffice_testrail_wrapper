@@ -76,4 +76,14 @@ class TestrailPlan
     end
     runs
   end
+
+  # Generate array of durations of runs
+  # @return [Array] array of durations, sorted by descrease
+  def plan_durations
+    durations_hash = {}
+    [runs.first].each do |current_run|
+      durations_hash[current_run.name] = current_run.duration
+    end
+    durations_hash.sort_by { |_, time| time }.reverse
+  end
 end
