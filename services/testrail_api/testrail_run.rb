@@ -129,4 +129,17 @@ class TestrailRun
     end
     LoggerHelper.print_to_log 'Get test results for run: ' + @name
   end
+
+  # Calculate duration of all tests in current spec in hours
+  # @return [Float] duration of tests in hours
+  def duration
+    pull_tests_results
+    test_results_date_array = []
+    @test_results.each_value do |test_result_sets|
+      test_result_sets.each do |test_result|
+        test_results_date_array << test_result.created_on
+      end
+    end
+    ((test_results_date_array.max - test_results_date_array.min).to_f / (60 * 60)).round(2)
+  end
 end
