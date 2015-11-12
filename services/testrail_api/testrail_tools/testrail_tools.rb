@@ -71,7 +71,7 @@ module TestrailTools
     check_config(__method__, :@project, :@plan)
     sorted_durations = plan.plan_durations
     sorted_durations.each do |run|
-      p "'#{run.first}' took about #{run[1]} hours"
+      LoggerHelper.print_to_log "'#{run.first}' took about #{run[1]} hours"
     end
   end
 
