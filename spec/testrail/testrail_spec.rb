@@ -2,17 +2,6 @@ require 'rspec'
 require_relative '../../testing_shared'
 
 describe Testrail2 do
-  describe 'available?' do
-    it 'check availability of correct connection' do
-      expect(Testrail2.new).to be_available
-    end
-
-    it 'check non-availability of correct connection' do
-      Testrail2.testrail_url = 'www.ya.ru'
-      expect(Testrail2.new).not_to be_available
-    end
-  end
-
   describe 'Tesrail Run' do
     it 'TestrailProject.plan' do
       project = Testrail2.new.project('Canvas Document Editor Autotests')
@@ -39,6 +28,17 @@ describe Testrail2 do
       project = Testrail2.new.project('Canvas Document Editor Autotests')
       run = project.plan('ver. 3.5.0 (build:199, rev:65637)').run('[Version history] for Table Smoke Test')
       expect(run.duration).to be > 0.1
+    end
+  end
+
+  describe 'available?' do
+    it 'check availability of correct connection' do
+      expect(Testrail2.new).to be_available
+    end
+
+    it 'check non-availability of correct connection' do
+      Testrail2.testrail_url = 'www.ya.ru'
+      expect(Testrail2.new).not_to be_available
     end
   end
 end
