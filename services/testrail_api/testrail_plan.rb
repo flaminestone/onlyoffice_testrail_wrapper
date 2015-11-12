@@ -65,6 +65,7 @@ class TestrailPlan
       run = entry.runs.first
       return run if run.name == run_name
     end
+    nil
   end
 
   # Get all runs in current plan

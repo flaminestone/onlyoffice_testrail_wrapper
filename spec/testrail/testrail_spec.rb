@@ -30,6 +30,11 @@ describe Testrail2 do
       expect(project.plan('ver. 3.5.0 (build:199, rev:65637)').run('All Formulas')).to be_a(TestrailRun)
     end
 
+    it 'TestrailProject.plan.run unknown name' do
+      project = Testrail2.new.project('Canvas Document Editor Autotests')
+      expect(project.plan('ver. 3.5.0 (build:199, rev:65637)').run('non-existing')).to be_nil
+    end
+
     it 'TestrailProject.plan.run.duration' do
       project = Testrail2.new.project('Canvas Document Editor Autotests')
       run = project.plan('ver. 3.5.0 (build:199, rev:65637)').run('[Version history] for Table Smoke Test')
