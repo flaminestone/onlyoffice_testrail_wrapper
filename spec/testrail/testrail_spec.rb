@@ -1,7 +1,7 @@
 require 'rspec'
 require_relative '../../testing_shared'
 
-describe Testrail2 do
+describe Testrail2, :use_private_key do
   describe 'Tesrail Run' do
     it 'TestrailProject.plan' do
       project = Testrail2.new.project('Canvas Document Editor Autotests')
