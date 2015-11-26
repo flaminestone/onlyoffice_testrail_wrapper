@@ -27,7 +27,7 @@ require_relative 'testrail_project'
 class Testrail2
   # @return [String] address of testrail
   # TESTRAIL_DIGITALOCEAN = 'http://107.170.125.157/testrail/'
-  @testrail_url = 'http://tm-testrail.no-ip.org/testrail/'
+  @testrail_url = 'http://testrail-nct.tk/testrail/'
 
   # @return [String] login for admin user
   @admin_user = nil
