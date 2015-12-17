@@ -29,10 +29,10 @@ class TestrailProject
   attr_accessor :milestones_names
 
   # Default constructor
-  # @param [id] id id of project, default = nil
-  # @param [String] name name of project, default = nil
-  # @param [String] announcement announcement of project, default = nil
-  # @param [true, false] is_completed, is project completed, default = nil
+  # @param id [id] id of project, default = nil
+  # @param name  [String] name of project, default = nil
+  # @param announcement [String] announcement of project, default = nil
+  # @param is_completed [true, false] is project completed, default = nil
   # @return [TestRunTestRail] new Test run
   def initialize(name = '', announcement = nil, show_announcement = true, is_completed = false, id = nil)
     @id = id.to_i

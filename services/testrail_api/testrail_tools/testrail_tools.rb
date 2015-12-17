@@ -45,7 +45,11 @@ module TestrailTools
 
   def self.close_all_plans_older_than(time)
     check_config(__method__, :@project)
-    project.get_plans.reject { |e| e['is_completed'] || e['created_on'] > time.to_i }.each { |plan| Testrail2.http_post('index.php?/api/v2/close_plan/' + plan['id'].to_s, {}) }
+    loop do
+      old_plans = project.get_plans.reject { |e| e['is_completed'] || e['created_on'] > time.to_i }
+      return if old_plans.empty?
+      old_plans.each { |run| Testrail2.http_post('index.php?/api/v2/close_plan/' + run['id'].to_s, {}) }
+    end
   end
 
   def self.close_run
@@ -61,6 +65,14 @@ module TestrailTools
   def self.get_tests_report(status)
     check_config(__method__, :@project, :@plan)
     { plan.name => plan.entries.inject({}) { |a, e| a.merge!({ e.name => e.runs.first.get_tests.map { |test| test['title'] if TestrailResult::RESULT_STATUSES.key(test['status_id']) == status }.compact }.delete_if { |_, value| value.empty? }) } }
+  end
+
+  def self.get_runs_durations
+    check_config(__method__, :@project, :@plan)
+    sorted_durations = plan.plan_durations
+    sorted_durations.each do |run|
+      LoggerHelper.print_to_log "'#{run.first}' took about #{run[1]} hours"
+    end
   end
 
   private

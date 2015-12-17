@@ -19,7 +19,7 @@ class TestrailHelper
     LoggerHelper.print_to_log 'Begin initializing Testrail...'
     @suites_to_add = []
     @add_all_suites = true
-    @search_plan_by_substring = true
+    @search_plan_by_substring = false
     yield(self) if block_given?
     @project = Testrail2.new.project project_name.to_s
     if plan_name
@@ -90,9 +90,11 @@ class TestrailHelper
     else
       result = :aborted
       comment += "\n" + exception.to_s
-      lines = StringHelper.get_string_elements_from_array(exception.backtrace, 'RubymineProjects')
-      lines.each_with_index { |e, i| lines[i] = e.to_s.sub(/.*RubymineProjects\//, '').gsub('`', " '") }
-      custom_fields.merge!(custom_autotest_error_line: lines.join("\r\n"))
+      unless exception.backtrace.nil?
+        lines = StringHelper.get_string_elements_from_array(exception.backtrace, 'RubymineProjects')
+        lines.each_with_index { |e, i| lines[i] = e.to_s.sub(/.*RubymineProjects\//, '').gsub('`', " '") }
+        custom_fields.merge!(custom_autotest_error_line: lines.join("\r\n"))
+      end
     end
     @last_case = example.description
     @suite.section(section_name).case(example.description).add_result @run.id, result, comment, custom_fields

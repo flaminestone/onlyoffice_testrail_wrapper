@@ -56,4 +56,35 @@ class TestrailPlan
     end
     run_results
   end
+
+  # Get run from plan
+  # @param run_name [String] run to find
+  # @return TestrailRun
+  def run(run_name)
+    @entries.each do |entry|
+      run = entry.runs.first
+      return run if run.name == run_name
+    end
+    nil
+  end
+
+  # Get all runs in current plan
+  # @return [Array, TestrailRuns]
+  def runs
+    runs = []
+    @entries.each do |entry|
+      runs << entry.runs.first
+    end
+    runs
+  end
+
+  # Generate array of durations of runs
+  # @return [Array] array of durations, sorted by descrease
+  def plan_durations
+    durations_hash = {}
+    [runs[0], runs[1]].each do |current_run|
+      durations_hash[current_run.name] = current_run.duration
+    end
+    durations_hash.sort_by { |_, time| time }.reverse
+  end
 end
