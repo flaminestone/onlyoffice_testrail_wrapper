@@ -67,7 +67,8 @@ class TestrailHelper
       example.set_custom_exception(comment) if result == :failed
     when exception.to_s.include?('got:'), exception.to_s.include?('expected:')
       result = :failed
-      comment += "\n" + exception.to_s.gsub('got:', "got:\n").gsub('expected:', "expected:\n")
+      failed_line = RspecHelper.find_failed_line(example)
+      comment += "\n#{exception.to_s.gsub('got:', "got:\n").gsub('expected:', "expected:\n")}\nIn line:\n#{failed_line}"
     when exception.to_s.include?('to return'), exception.to_s.include?('expected')
       result = :failed
       comment += "\n" + exception.to_s.gsub('to return ', "to return:\n").gsub(', got ', "\ngot:\n")
