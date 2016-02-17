@@ -4,7 +4,7 @@
 # Class for working with Test results
 class TestrailResult
   RESULT_STATUSES = { passed: 1, blocked: 2, untested: 3, retest: 4, failed: 5, passed_2: 6, work_for_me: 7,
-                      pending: 8, aborted: 9, js_error: 10, lpv: 11, service_unavailable: 12 }
+                      pending: 8, aborted: 9, js_error: 10, lpv: 11, service_unavailable: 12 }.freeze
   # @return [Integer] Id of test result
   attr_accessor :id
   # @return [String] Title of test result

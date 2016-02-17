@@ -75,7 +75,7 @@ class TestrailRun
     when 'String'
       get_test_by_name name_or_id
     else
-      fail 'Wrong argument. Must be name [String] or id [Integer]'
+      raise 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 

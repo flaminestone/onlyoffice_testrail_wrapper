@@ -33,7 +33,7 @@ class TestrailHelper
     else
       @run = @project.init_run_by_name(run_name ? run_name.to_s : suite_name.to_s, @suite.id)
     end
-    fail "Plan '#{@plan.name}' is completed! Cannot add results" if !@plan.nil? && @plan.is_completed
+    raise "Plan '#{@plan.name}' is completed! Cannot add results" if !@plan.nil? && @plan.is_completed
     LoggerHelper.print_to_log 'Initializing complete!'
   end
 
@@ -57,7 +57,7 @@ class TestrailHelper
     end
     exception = example.exception
     custom_fields = {}
-    custom_fields.merge!(custom_js_error: WebDriver.web_console_error) unless WebDriver.web_console_error.nil?
+    custom_fields[:custom_js_error] = WebDriver.web_console_error unless WebDriver.web_console_error.nil?
     case
     when @ignore_parameters && (ignored_hash = ignore_case?(example.metadata))
       comment += "\nTest ignored by #{ignored_hash}"
@@ -79,14 +79,14 @@ class TestrailHelper
       result = :lpv
       comment += "\n" + exception.to_s
     when exception.nil?
-      case
-      when @last_case == example.description
-        result = :passed_2
-      when custom_fields.key?(:custom_js_error)
-        result = :js_error
-      else
-        result = :passed
-      end
+      result = case
+               when @last_case == example.description
+                 :passed_2
+               when custom_fields.key?(:custom_js_error)
+                 :js_error
+               else
+                 :passed
+               end
       comment += "\nOk"
     else
       result = :aborted
@@ -94,7 +94,7 @@ class TestrailHelper
       unless exception.backtrace.nil?
         lines = StringHelper.get_string_elements_from_array(exception.backtrace, 'RubymineProjects')
         lines.each_with_index { |e, i| lines[i] = e.to_s.sub(/.*RubymineProjects\//, '').gsub('`', " '") }
-        custom_fields.merge!(custom_autotest_error_line: lines.join("\r\n"))
+        custom_fields[:custom_autotest_error_line] = lines.join("\r\n")
       end
     end
     @last_case = example.description
@@ -152,7 +152,7 @@ class TestrailHelper
     bug_url = pending_message[/^http:\/\/192.168.3.112\/show_bug.cgi\?id=\d+/]
     return [:pending, pending_message] unless bug_url
     bug_status = get_bug_status(bug_url)
-    bug_status.include?('FIXED') ? status = :failed : status = :pending
+    status = bug_status.include?('FIXED') ? :failed : :pending
     [status, bug_url + "\nBug has status: " + bug_status + ', test was failed']
   end
 
@@ -164,7 +164,7 @@ class TestrailHelper
   end
 
   def ignore_case?(example_metadata)
-    fail 'Ignore parameters must be Hash!!' unless @ignore_parameters.instance_of?(Hash)
+    raise 'Ignore parameters must be Hash!!' unless @ignore_parameters.instance_of?(Hash)
     @ignore_parameters.each { |key, value| return { key => value } if example_metadata[key] == value }
     false
   end
