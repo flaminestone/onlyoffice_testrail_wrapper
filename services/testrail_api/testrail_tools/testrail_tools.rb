@@ -75,7 +75,7 @@ module TestrailTools
     end
   end
 
-  private
+  private_class_method
 
   def self.project
     @project ||= Testrail2.new.project(@testrail_config.project)
