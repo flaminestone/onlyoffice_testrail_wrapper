@@ -33,7 +33,7 @@ class TestrailHelper
     else
       @run = @project.init_run_by_name(run_name ? run_name.to_s : suite_name.to_s, @suite.id)
     end
-    fail "Plan '#{@plan.name}' is completed! Cannot add results" if !@plan.nil? && @plan.is_completed
+    raise "Plan '#{@plan.name}' is completed! Cannot add results" if !@plan.nil? && @plan.is_completed
     LoggerHelper.print_to_log 'Initializing complete!'
   end
 
@@ -164,7 +164,7 @@ class TestrailHelper
   end
 
   def ignore_case?(example_metadata)
-    fail 'Ignore parameters must be Hash!!' unless @ignore_parameters.instance_of?(Hash)
+    raise 'Ignore parameters must be Hash!!' unless @ignore_parameters.instance_of?(Hash)
     @ignore_parameters.each { |key, value| return { key => value } if example_metadata[key] == value }
     false
   end

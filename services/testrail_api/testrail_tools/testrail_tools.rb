@@ -94,7 +94,7 @@ module TestrailTools
   end
 
   def self.check_config(*args)
-    fail "Method: #{args.shift} - some of needed parameters are missing: #{args.join(', ')}. To configure them, type:\n
+    raise "Method: #{args.shift} - some of needed parameters are missing: #{args.join(', ')}. To configure them, type:\n
     TestrailTools.configure do |config|\n\t\tconfig.param_name = value\n\tend" unless @testrail_config && (@testrail_config.instance_variables & args[1..-1]) == args[1..-1]
   end
 

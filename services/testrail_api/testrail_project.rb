@@ -70,7 +70,7 @@ class TestrailProject
     when 'String'
       init_suite_by_name name_or_id
     else
-      fail 'Wrong argument. Must be name [String] or id [Integer]'
+      raise 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 
@@ -128,7 +128,7 @@ class TestrailProject
     when 'String'
       init_run_by_name name_or_id
     else
-      fail 'Wrong argument. Must be name [String] or id [Integer]'
+      raise 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 
@@ -182,7 +182,7 @@ class TestrailProject
     when 'String'
       init_plan_by_name name_or_id
     else
-      fail 'Wrong argument. Must be name [String] or id [Integer]'
+      raise 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 
@@ -240,7 +240,7 @@ class TestrailProject
     when 'String'
       init_milestone_by_name name_or_id
     else
-      fail 'Wrong argument. Must be name [String] or id [Integer]'
+      raise 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 

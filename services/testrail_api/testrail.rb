@@ -102,7 +102,7 @@ class Testrail2
     when 'String'
       init_project_by_name name_or_id
     else
-      fail 'Wrong argument. Must be name [String] or id [Integer]'
+      raise 'Wrong argument. Must be name [String] or id [Integer]'
     end
   end
 
