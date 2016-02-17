@@ -79,14 +79,14 @@ class TestrailHelper
       result = :lpv
       comment += "\n" + exception.to_s
     when exception.nil?
-      case
-      when @last_case == example.description
-        result = :passed_2
-      when custom_fields.key?(:custom_js_error)
-        result = :js_error
-      else
-        result = :passed
-      end
+      result = case
+               when @last_case == example.description
+                 :passed_2
+               when custom_fields.key?(:custom_js_error)
+                 :js_error
+               else
+                 :passed
+               end
       comment += "\nOk"
     else
       result = :aborted
@@ -152,7 +152,7 @@ class TestrailHelper
     bug_url = pending_message[/^http:\/\/192.168.3.112\/show_bug.cgi\?id=\d+/]
     return [:pending, pending_message] unless bug_url
     bug_status = get_bug_status(bug_url)
-    bug_status.include?('FIXED') ? status = :failed : status = :pending
+    status = bug_status.include?('FIXED') ? :failed : :pending
     [status, bug_url + "\nBug has status: " + bug_status + ', test was failed']
   end
 
