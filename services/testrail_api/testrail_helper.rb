@@ -57,7 +57,7 @@ class TestrailHelper
     end
     exception = example.exception
     custom_fields = {}
-    custom_fields.merge!(custom_js_error: WebDriver.web_console_error) unless WebDriver.web_console_error.nil?
+    custom_fields[:custom_js_error] = WebDriver.web_console_error unless WebDriver.web_console_error.nil?
     case
     when @ignore_parameters && (ignored_hash = ignore_case?(example.metadata))
       comment += "\nTest ignored by #{ignored_hash}"
@@ -94,7 +94,7 @@ class TestrailHelper
       unless exception.backtrace.nil?
         lines = StringHelper.get_string_elements_from_array(exception.backtrace, 'RubymineProjects')
         lines.each_with_index { |e, i| lines[i] = e.to_s.sub(/.*RubymineProjects\//, '').gsub('`', " '") }
-        custom_fields.merge!(custom_autotest_error_line: lines.join("\r\n"))
+        custom_fields[:custom_autotest_error_line] = lines.join("\r\n")
       end
     end
     @last_case = example.description
