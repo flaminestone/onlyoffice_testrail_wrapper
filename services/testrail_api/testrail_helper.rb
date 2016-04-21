@@ -65,6 +65,7 @@ class TestrailHelper
     when example.pending
       result, comment = parse_pending_comment(example.execution_result.pending_message)
       example.set_custom_exception(comment) if result == :failed
+      result = :lpv if comment.downcase.include?('limited program version')
     when exception.to_s.include?('got:'), exception.to_s.include?('expected:')
       result = :failed
       failed_line = RspecHelper.find_failed_line(example)
