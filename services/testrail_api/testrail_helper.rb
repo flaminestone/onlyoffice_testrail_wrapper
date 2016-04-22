@@ -4,13 +4,16 @@ require_relative 'testrail'
 
 # noinspection RubyTooManyInstanceVariablesInspection
 class TestrailHelper
-  include BugzillaHelper
-
   attr_reader :project, :plan, :suite, :run
   attr_accessor :add_all_suites, :ignore_parameters, :suites_to_add, :search_plan_by_substring, :in_debug
 
   def initialize(project_name, suite_name = nil, plan_name = nil, run_name = nil)
     @in_debug = RspecHelper.debug?
+    begin
+      @bugzilla_helper = BugzillaHelper.new
+    rescue Errno::ENOENT
+      @bugzilla_helper = nil
+    end
     if @in_debug
       LoggerHelper.print_to_log 'Do not initialize Testrail, because spec run in debug'
       @run = TestrailRun.new
@@ -150,11 +153,12 @@ class TestrailHelper
   end
 
   def parse_pending_comment(pending_message)
-    bug_url = pending_message[/^http:\/\/192.168.3.112\/show_bug.cgi\?id=\d+/]
-    return [:pending, pending_message] unless bug_url
-    bug_status = get_bug_status(bug_url)
-    status = bug_status.include?('FIXED') ? :failed : :pending
-    [status, bug_url + "\nBug has status: " + bug_status + ', test was failed']
+    return [:pending, 'There is problem with initialization of @bugzilla_helper'] if @bugzilla_helper.nil?
+    bug_id = @bugzilla_helper.bug_id_from_string(pending_message)
+    return [:pending, pending_message] if bug_id.nil?
+    bug_status = @bugzilla_helper.bug_status(bug_id)
+    status = bug_status.include?('VERIFIED') ? :failed : :pending
+    [status, "#{pending_message}\nBug has status: #{bug_status}, test was failed"]
   end
 
   def all_suites_names
