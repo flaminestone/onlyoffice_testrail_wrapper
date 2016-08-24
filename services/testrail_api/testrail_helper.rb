@@ -66,8 +66,9 @@ class TestrailHelper
       comment += "\nTest ignored by #{ignored_hash}"
       result = :blocked
     when example.pending
-      result, comment = parse_pending_comment(example.execution_result.pending_message)
+      result, comment, bug_id = parse_pending_comment(example.execution_result.pending_message)
       result, comment = [:failed, "Test passed! #{comment}"] if example.exception.to_s == 'Expected example to fail since it is pending, but it passed.'
+      custom_fields[:defects] = bug_id.to_s
       example.set_custom_exception(comment) if result == :failed
       result = :lpv if comment.downcase.include?('limited program version')
     when exception.to_s.include?('got:'), exception.to_s.include?('expected:')
@@ -154,12 +155,12 @@ class TestrailHelper
   end
 
   def parse_pending_comment(pending_message)
-    return [:pending, 'There is problem with initialization of @bugzilla_helper'] if @bugzilla_helper.nil?
+    return [:pending, 'There is problem with initialization of @bugzilla_helper', nil] if @bugzilla_helper.nil?
     bug_id = @bugzilla_helper.bug_id_from_string(pending_message)
     return [:pending, pending_message] if bug_id.nil?
     bug_status = @bugzilla_helper.bug_status(bug_id)
     status = bug_status.include?('VERIFIED') ? :failed : :pending
-    [status, "#{pending_message}\nBug has status: #{bug_status}, test was failed"]
+    [status, "#{pending_message}\nBug has status: #{bug_status}, test was failed", bug_id]
   end
 
   def all_suites_names
