@@ -1,9 +1,11 @@
 # encoding: utf-8
 
+require_relative 'testrail_helper/testrail_helper_rspec_metadata'
 require_relative 'testrail'
 
 # noinspection RubyTooManyInstanceVariablesInspection
 class TestrailHelper
+  include TestrailHelperRspecMetadata
   attr_reader :project, :plan, :suite, :run
   attr_accessor :add_all_suites, :ignore_parameters, :suites_to_add, :search_plan_by_substring, :in_debug
 
@@ -61,6 +63,7 @@ class TestrailHelper
     exception = example.exception
     custom_fields = {}
     custom_fields[:custom_js_error] = WebDriver.web_console_error unless WebDriver.web_console_error.nil?
+    custom_fields[:elapsed] = example_time_in_seconds(example)
     case
     when @ignore_parameters && (ignored_hash = ignore_case?(example.metadata))
       comment += "\nTest ignored by #{ignored_hash}"
@@ -152,15 +155,6 @@ class TestrailHelper
   def get_plan_name_by_substring(string)
     @project.get_plans.each { |plan| return plan['name'] if plan['name'].include?(string) }
     string
-  end
-
-  def parse_pending_comment(pending_message)
-    return [:pending, 'There is problem with initialization of @bugzilla_helper', nil] if @bugzilla_helper.nil?
-    bug_id = @bugzilla_helper.bug_id_from_string(pending_message)
-    return [:pending, pending_message] if bug_id.nil?
-    bug_status = @bugzilla_helper.bug_status(bug_id)
-    status = bug_status.include?('VERIFIED') ? :failed : :pending
-    [status, "#{pending_message}\nBug has status: #{bug_status}, test was failed", bug_id]
   end
 
   def all_suites_names
