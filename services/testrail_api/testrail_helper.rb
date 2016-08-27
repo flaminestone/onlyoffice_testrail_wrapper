@@ -7,7 +7,7 @@ require_relative 'testrail'
 class TestrailHelper
   include TestrailHelperRspecMetadata
   attr_reader :project, :plan, :suite, :run
-  attr_accessor :add_all_suites, :ignore_parameters, :suites_to_add, :search_plan_by_substring, :in_debug
+  attr_accessor :add_all_suites, :ignore_parameters, :suites_to_add, :search_plan_by_substring, :in_debug, :version
 
   def initialize(project_name, suite_name = nil, plan_name = nil, run_name = nil)
     @in_debug = RspecHelper.debug?
