@@ -61,9 +61,7 @@ class TestrailHelper
       return
     end
     exception = example.exception
-    custom_fields = {}
-    custom_fields[:custom_js_error] = WebDriver.web_console_error unless WebDriver.web_console_error.nil?
-    custom_fields[:elapsed] = example_time_in_seconds(example)
+    custom_fields = init_custom_fields(example)
     case
     when @ignore_parameters && (ignored_hash = ignore_case?(example.metadata))
       comment += "\nTest ignored by #{ignored_hash}"
