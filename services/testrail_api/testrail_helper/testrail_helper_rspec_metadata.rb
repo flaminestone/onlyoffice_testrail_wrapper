@@ -13,7 +13,15 @@ module TestrailHelperRspecMetadata
     custom_fields[:custom_js_error] = WebDriver.web_console_error unless WebDriver.web_console_error.nil?
     custom_fields[:elapsed] = example_time_in_seconds(example)
     custom_fields[:version] = version || @plan.try(:name)
+    custom_fields[:custom_screenshot_link] = screenshot_link if example.exception
     custom_fields
+  end
+
+  # @return [String] link to screenshot
+  # empty string if not supported
+  def screenshot_link
+    return AppManager.create_screenshots if AppManager.respond_to?(:create_screenshots)
+    ''
   end
 
   def parse_pending_comment(pending_message)
