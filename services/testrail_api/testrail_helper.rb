@@ -62,34 +62,35 @@ class TestrailHelper
     end
     exception = example.exception
     custom_fields = init_custom_fields(example)
-    case
-    when @ignore_parameters && (ignored_hash = ignore_case?(example.metadata))
+    if @ignore_parameters && (ignored_hash = ignore_case?(example.metadata))
       comment += "\nTest ignored by #{ignored_hash}"
       result = :blocked
-    when example.pending
+    elsif example.pending
       result, comment, bug_id = parse_pending_comment(example.execution_result.pending_message)
-      result, comment = [:failed, "Test passed! #{comment}"] if example.exception.to_s == 'Expected example to fail since it is pending, but it passed.'
+      if example.exception.to_s == 'Expected example to fail since it is pending, but it passed.'
+        result = :failed
+        comment = "Test passed! #{comment}"
+      end
       custom_fields[:defects] = bug_id.to_s
       example.set_custom_exception(comment) if result == :failed
       result = :lpv if comment.downcase.include?('limited program version')
-    when exception.to_s.include?('got:'), exception.to_s.include?('expected:')
+    elsif exception.to_s.include?('got:') || exception.to_s.include?('expected:')
       result = :failed
       failed_line = RspecHelper.find_failed_line(example)
       comment += "\n#{exception.to_s.gsub('got:', "got:\n").gsub('expected:', "expected:\n")}\nIn line:\n#{failed_line}"
-    when exception.to_s.include?('to return'), exception.to_s.include?('expected')
+    elsif exception.to_s.include?('to return') || exception.to_s.include?('expected')
       result = :failed
       comment += "\n" + exception.to_s.gsub('to return ', "to return:\n").gsub(', got ', "\ngot:\n")
-    when exception.to_s.include?('Service Unavailable')
+    elsif exception.to_s.include?('Service Unavailable')
       result = :service_unavailable
       comment += "\n" + exception.to_s
-    when exception.to_s.include?('Limited program version')
+    elsif exception.to_s.include?('Limited program version')
       result = :lpv
       comment += "\n" + exception.to_s
-    when exception.nil?
-      result = case
-               when @last_case == example.description
+    elsif exception.nil?
+      result = if @last_case == example.description
                  :passed_2
-               when custom_fields.key?(:custom_js_error)
+               elsif custom_fields.key?(:custom_js_error)
                  :js_error
                else
                  :passed
@@ -100,7 +101,7 @@ class TestrailHelper
       comment += "\n" + exception.to_s
       unless exception.backtrace.nil?
         lines = StringHelper.get_string_elements_from_array(exception.backtrace, 'RubymineProjects')
-        lines.each_with_index { |e, i| lines[i] = e.to_s.sub(/.*RubymineProjects\//, '').gsub('`', " '") }
+        lines.each_with_index { |e, i| lines[i] = e.to_s.sub(%r{.*RubymineProjects/}, '').gsub('`', " '") }
         custom_fields[:custom_autotest_error_line] = lines.join("\r\n")
       end
     end
