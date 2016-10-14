@@ -59,7 +59,7 @@ module TestrailTools
 
   def self.get_incompleted_plan_entries
     check_config(__method__, :@project, :@plan)
-    plan.entries.reject { |entry| entry.runs.first.untested_count == 0 }
+    plan.entries.reject { |entry| entry.runs.first.untested_count.zero? }
   end
 
   def self.get_tests_report(status)
