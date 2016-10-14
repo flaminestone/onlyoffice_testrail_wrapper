@@ -100,7 +100,7 @@ class TestrailHelper
       comment += "\n" + exception.to_s
       unless exception.backtrace.nil?
         lines = StringHelper.get_string_elements_from_array(exception.backtrace, 'RubymineProjects')
-        lines.each_with_index { |e, i| lines[i] = e.to_s.sub(/.*RubymineProjects\//, '').gsub('`', " '") }
+        lines.each_with_index { |e, i| lines[i] = e.to_s.sub(%r{.*RubymineProjects/}, '').gsub('`', " '") }
         custom_fields[:custom_autotest_error_line] = lines.join("\r\n")
       end
     end
