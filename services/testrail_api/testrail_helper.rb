@@ -68,7 +68,10 @@ class TestrailHelper
       result = :blocked
     when example.pending
       result, comment, bug_id = parse_pending_comment(example.execution_result.pending_message)
-      result, comment = [:failed, "Test passed! #{comment}"] if example.exception.to_s == 'Expected example to fail since it is pending, but it passed.'
+      if example.exception.to_s == 'Expected example to fail since it is pending, but it passed.'
+        result = :failed
+        comment = "Test passed! #{comment}"
+      end
       custom_fields[:defects] = bug_id.to_s
       example.set_custom_exception(comment) if result == :failed
       result = :lpv if comment.downcase.include?('limited program version')
