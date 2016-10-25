@@ -1,5 +1,4 @@
 require_relative '../testrail'
-require 'active_support'
 
 #  USAGE
 #  Configure TestrailTools with needed parameters:
