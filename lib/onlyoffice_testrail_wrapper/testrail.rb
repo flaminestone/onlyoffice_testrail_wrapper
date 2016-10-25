@@ -46,6 +46,8 @@ class Testrail2
     attr_accessor :admin_pass
 
     def read_keys
+      @admin_user = ENV['TESTRAIL_USER']
+      @admin_pass = ENV['TESTRAIL_PASSWORD']
       return unless @admin_user.nil? && @admin_pass.nil?
       begin
         @admin_user = File.read(Dir.home + '/.testrail/user').delete("\n")
