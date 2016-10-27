@@ -98,7 +98,7 @@ class TestrailRun
 
   def add_result_by_case_id(result, case_id, comment = '', version = '')
     HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_result_for_case/' + @id.to_s + '/' + case_id.to_s,
-                        status_id: TestrailResult[result], comment: comment, version: version), TestrailResult)
+                                                           status_id: TestrailResult[result], comment: comment, version: version), TestrailResult)
   end
 
   def parent_suite

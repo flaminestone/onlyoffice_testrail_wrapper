@@ -80,7 +80,7 @@ class TestrailSection
   # @return [TestCaseTestrail] created test case
   def create_new_case(title, type_id = 3, priority_id = 4, custom_steps = '')
     new_case = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_case/' + @id.to_s, title: StringHelper.warnstrip!(title.to_s), type_id: type_id,
-                                                                             priority_id: priority_id, custom_steps: custom_steps), TestrailCase)
+                                                                                                                priority_id: priority_id, custom_steps: custom_steps), TestrailCase)
     new_case.instance_variable_set('@section', self)
     LoggerHelper.print_to_log "Created new case: #{new_case.title}"
     @cases_names[new_case.title] = new_case.id

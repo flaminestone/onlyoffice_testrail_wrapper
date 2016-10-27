@@ -56,29 +56,6 @@ Style/AccessorMethodName:
     - 'lib/onlyoffice_testrail_wrapper/testrail_test.rb'
     - 'lib/onlyoffice_testrail_wrapper/testrail_tools/testrail_tools.rb'
 
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle, SupportedLastArgumentHashStyles.
-# SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
-Style/AlignHash:
-  Exclude:
-    - 'lib/onlyoffice_testrail_wrapper/testrail.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_case.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_milestone.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_plan.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_project.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_section.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_suite.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_test.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: with_first_parameter, with_fixed_indentation
-Style/AlignParameters:
-  Exclude:
-    - 'lib/onlyoffice_testrail_wrapper/testrail_run.rb'
-
 # Offense count: 9
 Style/Documentation:
   Exclude:
@@ -92,14 +69,3 @@ Style/Documentation:
     - 'lib/onlyoffice_testrail_wrapper/testrail_plan_entry.rb'
     - 'lib/onlyoffice_testrail_wrapper/testrail_test.rb'
     - 'lib/onlyoffice_testrail_wrapper/testrail_tools/testrail_tools.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: final_newline, final_blank_line
-Style/TrailingBlankLines:
-  Exclude:
-    - 'Gemfile'
-    - 'lib/onlyoffice_testrail_wrapper.rb'
-    - 'lib/onlyoffice_testrail_wrapper/helpers/string_helper.rb'
-    - 'spec/spec_helper.rb'
