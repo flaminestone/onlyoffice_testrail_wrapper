@@ -118,7 +118,7 @@ class Testrail2
 
   def create_new_project(name, announcement = '', show_announcement = true)
     new_project = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_project', name: StringHelper.warnstrip!(name.to_s), announcement: announcement,
-                                                                       show_announcement: show_announcement), TestrailProject)
+                                                                                                          show_announcement: show_announcement), TestrailProject)
     LoggerHelper.print_to_log 'Created new project: ' + new_project.name
     new_project.instance_variable_set('@testrail', self)
     @projects_names[new_project.name] = new_project.id

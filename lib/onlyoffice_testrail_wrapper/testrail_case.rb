@@ -35,7 +35,7 @@ class TestrailCase
     @section.cases_names.delete @title
     @section.cases_names[StringHelper.warnstrip!(title.to_s)] = @id
     HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/update_case/' + @id.to_s, title: title, type_id: type_id,
-                                                                     priority_id: priority_id, custom_steps: custom_steps), TestrailCase)
+                                                                                                        priority_id: priority_id, custom_steps: custom_steps), TestrailCase)
   end
 
   def delete
@@ -52,7 +52,7 @@ class TestrailCase
 
   def add_result(run_id, result, comment = '', custom_fields = {}, version = '')
     response = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_result_for_case/' + run_id.to_s + '/' + @id.to_s, { status_id: TestrailResult::RESULT_STATUSES[result],
-                                                                                                              comment: comment, version: version }.merge(custom_fields)), TestrailResult)
+                                                                                                                                                 comment: comment, version: version }.merge(custom_fields)), TestrailResult)
     LoggerHelper.print_to_log "Set test case result: #{result}. URL: #{Testrail2.get_testrail_address}index.php?/tests/view/#{response.test_id}", output_colors[result]
   end
 

@@ -50,7 +50,7 @@ class TestrailProject
     @testrail.projects_names.delete[@name]
     @testrail.projects_names[StringHelper.warnstrip!(name.to_s)] = @id
     updated_project = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/update_project/' + @id.to_s, name: name, announcement: announcement,
-                                                                                          show_announcement: show_announcement, is_completed: is_completed), TestrailProject)
+                                                                                                                             show_announcement: show_announcement, is_completed: is_completed), TestrailProject)
     LoggerHelper.print_to_log 'Updated project: ' + updated_project.name
     updated_project
   end
@@ -219,7 +219,7 @@ class TestrailProject
   # @param [Integer] milestone_id
   def create_new_plan(name, entries = [], description = '', milestone_id = nil)
     new_plan = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_plan/' + @id.to_s, name: StringHelper.warnstrip!(name), description: description,
-                                                                             milestone_id: milestone_id, entries: entries), TestrailPlan)
+                                                                                                                milestone_id: milestone_id, entries: entries), TestrailPlan)
     LoggerHelper.print_to_log 'Created new plan: ' + new_plan.name
     new_plan.entries.each_with_index do |entry, i|
       new_plan.entries[i] = HashHelper.parse_to_class_variable(entry, TestrailPlanEntry)

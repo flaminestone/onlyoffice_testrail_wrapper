@@ -57,7 +57,7 @@ class TestrailSuite
   def create_new_section(name, parent_section = nil)
     parent_section = get_section_by_name(parent_section).id if parent_section.is_a?(String)
     new_section = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_section/' + @project_id.to_s, name: StringHelper.warnstrip!(name.to_s),
-                                                                                           parent_id: parent_section, suite_id: @id), TestrailSection)
+                                                                                                                              parent_id: parent_section, suite_id: @id), TestrailSection)
     LoggerHelper.print_to_log 'Created new section: ' + new_section.name
     @sections_names[new_section.name] = new_section.id
     new_section.instance_variable_set '@project_id', @project_id

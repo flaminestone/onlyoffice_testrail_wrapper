@@ -32,7 +32,7 @@ class TestrailTest
   def add_result(result, comment = '', version = '')
     result = TestrailResult::RESULT_STATUSES[result] if result.is_a?(Symbol)
     HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_result/' + @id.to_s, status_id: result,
-                                                                    comment: comment, version: version), TestrailResult)
+                                                                                                       comment: comment, version: version), TestrailResult)
     LoggerHelper.print_to_log 'Set test result: ' + result.to_s
   end
 end
