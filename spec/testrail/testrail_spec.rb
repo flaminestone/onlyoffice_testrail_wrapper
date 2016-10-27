@@ -30,6 +30,15 @@ describe OnlyofficeTestrailWrapper::Testrail2 do
     end
   end
 
+  describe 'TestrailProject' do
+    it 'TestrailProject#get_plans with filter' do
+      project = OnlyofficeTestrailWrapper::Testrail2.new.project('Canvas Document Editor Autotests')
+      plans_without_filter = project.get_plans
+      plans_filtered = project.get_plans(is_completed: 0)
+      expect(plans_without_filter.length).to be > plans_filtered.length
+    end
+  end
+
   describe 'available?' do
     it 'check availability of correct connection' do
       expect(OnlyofficeTestrailWrapper::Testrail2.new).to be_available
