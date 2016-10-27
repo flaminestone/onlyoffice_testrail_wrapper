@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe StringHelper do
+describe OnlyofficeTestrailWrapper::StringHelper do
   warnstrip_string = 'test end space'
 
   it 'StringHelper.warnstrip!' do
-    expect(StringHelper.warnstrip!("#{warnstrip_string} ")).to eq(warnstrip_string)
+    expect(OnlyofficeTestrailWrapper::StringHelper.warnstrip!("#{warnstrip_string} ")).to eq(warnstrip_string)
   end
 end
