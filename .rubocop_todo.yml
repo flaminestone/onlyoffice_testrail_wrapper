@@ -71,14 +71,6 @@ Style/AlignHash:
     - 'lib/onlyoffice_testrail_wrapper/testrail_suite.rb'
     - 'lib/onlyoffice_testrail_wrapper/testrail_test.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: with_first_parameter, with_fixed_indentation
-Style/AlignParameters:
-  Exclude:
-    - 'lib/onlyoffice_testrail_wrapper/testrail_run.rb'
-
 # Offense count: 9
 Style/Documentation:
   Exclude:
