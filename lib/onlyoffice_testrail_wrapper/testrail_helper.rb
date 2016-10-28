@@ -3,16 +3,18 @@
 require_relative 'testrail_helper/testrail_helper_rspec_metadata'
 require_relative 'testrail'
 require_relative 'helpers/bugzilla_helper'
+require_relative 'helpers/ruby_helper'
 
 module OnlyofficeTestrailWrapper
-  # noinspection RubyTooManyInstanceVariablesInspection
+  # Class with help methods with testrail
   class TestrailHelper
+    include RubyHelper
     include TestrailHelperRspecMetadata
     attr_reader :project, :plan, :suite, :run
     attr_accessor :add_all_suites, :ignore_parameters, :suites_to_add, :search_plan_by_substring, :in_debug, :version
 
     def initialize(project_name, suite_name = nil, plan_name = nil, run_name = nil)
-      @in_debug = RspecHelper.debug?
+      @in_debug = debug?
       begin
         @bugzilla_helper = BugzillaHelper.new
       rescue Errno::ENOENT
