@@ -1,3 +1,5 @@
+require 'active_support/core_ext/object/try'
+
 module OnlyofficeTestrailWrapper
   # Module for working with rspec metadata
   module TestrailHelperRspecMetadata
