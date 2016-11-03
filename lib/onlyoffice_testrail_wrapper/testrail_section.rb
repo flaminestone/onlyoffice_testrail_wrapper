@@ -62,7 +62,9 @@ module OnlyofficeTestrailWrapper
 
     def get_case_by_name(name)
       get_cases if @cases_names.nil?
-      @cases_names[StringHelper.warnstrip!(name.to_s)].nil? ? nil : get_case_by_id(@cases_names[name])
+      corrected_case_name = StringHelper.warnstrip!(name.to_s)
+      return nil if @cases_names[corrected_case_name].nil?
+      get_case_by_id(@cases_names[corrected_case_name])
     end
 
     # Init case by it's name

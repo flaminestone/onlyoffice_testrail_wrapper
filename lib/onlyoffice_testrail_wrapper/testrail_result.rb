@@ -19,6 +19,8 @@ module OnlyofficeTestrailWrapper
     # @return [Integer] date of creation of result from begging of era
     attr_accessor :created_on
     attr_reader :test_id
+    # @return [String] error if any happened
+    attr_accessor :error
 
     # Default constructor
     # @param [Symbol] status status to set. Could be :passed, blocked, retest or :failed
@@ -30,6 +32,7 @@ module OnlyofficeTestrailWrapper
       @status_id = RESULT_STATUSES[status]
       @comment = comment
       @version = version
+      @error = nil
     end
 
     # Add result of test result
