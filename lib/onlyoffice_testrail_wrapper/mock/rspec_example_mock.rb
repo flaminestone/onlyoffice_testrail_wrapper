@@ -16,11 +16,13 @@ module OnlyofficeTestrailWrapper
     attr_accessor :pending
     attr_accessor :description
 
-    def initialize
-      @exception = RspecExceptionMock.new
+    def initialize(description: 'MockDescription',
+                   exception: RspecExceptionMock.new)
+      @exception = exception
       @metadata = {}
       @pending = false
-      @description = 'MockDescription'
+      @description = description
+      @section = ''
     end
   end
 end
