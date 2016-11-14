@@ -54,13 +54,13 @@ module OnlyofficeTestrailWrapper
       @testrail.projects_names[StringHelper.warnstrip!(name.to_s)] = @id
       updated_project = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/update_project/' + @id.to_s, name: name, announcement: announcement,
                                                                                                                                show_announcement: show_announcement, is_completed: is_completed), TestrailProject)
-      LoggerHelper.print_to_log 'Updated project: ' + updated_project.name
+      OnlyofficeLoggerHelper.log 'Updated project: ' + updated_project.name
       updated_project
     end
 
     def delete
       Testrail2.http_post 'index.php?/api/v2/delete_project/' + @id.to_s, {}
-      LoggerHelper.print_to_log 'Deleted project: ' + @name
+      OnlyofficeLoggerHelper.log 'Deleted project: ' + @name
       @testrail.projects_names.delete @name
     end
 
@@ -96,7 +96,7 @@ module OnlyofficeTestrailWrapper
     def get_suite_by_id(id)
       suite = HashHelper.parse_to_class_variable(Testrail2.http_get('index.php?/api/v2/get_suite/' + id.to_s), TestrailSuite)
       suite.instance_variable_set('@project', self)
-      LoggerHelper.print_to_log('Initialized suite: ' + suite.name)
+      OnlyofficeLoggerHelper.log('Initialized suite: ' + suite.name)
       suite
     end
 
@@ -115,7 +115,7 @@ module OnlyofficeTestrailWrapper
     def create_new_suite(name, description = '')
       new_suite = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_suite/' + @id.to_s, name: StringHelper.warnstrip!(name), description: description), TestrailSuite)
       new_suite.instance_variable_set('@project', self)
-      LoggerHelper.print_to_log 'Created new suite: ' + new_suite.name
+      OnlyofficeLoggerHelper.log 'Created new suite: ' + new_suite.name
       @suites_names[new_suite.name] = new_suite.id
       new_suite
     end
@@ -155,7 +155,7 @@ module OnlyofficeTestrailWrapper
 
     def get_run_by_id(id)
       run = HashHelper.parse_to_class_variable(Testrail2.http_get('index.php?/api/v2/get_run/' + id.to_s), TestrailRun)
-      LoggerHelper.print_to_log('Initialized run: ' + run.name)
+      OnlyofficeLoggerHelper.log('Initialized run: ' + run.name)
       run.instance_variable_set('@project', self)
       run
     end
@@ -168,7 +168,7 @@ module OnlyofficeTestrailWrapper
 
     def create_new_run(name, suite_id, description = '')
       new_run = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_run/' + @id.to_s, name: StringHelper.warnstrip!(name), description: description, suite_id: suite_id), TestrailRun)
-      LoggerHelper.print_to_log 'Created new run: ' + new_run.name
+      OnlyofficeLoggerHelper.log 'Created new run: ' + new_run.name
       new_run.instance_variable_set('@project', self)
       @runs_names[new_run.name] = new_run.id
       new_run
@@ -196,7 +196,7 @@ module OnlyofficeTestrailWrapper
 
     def get_milestone_by_id(id)
       milestone = HashHelper.parse_to_class_variable(Testrail2.http_get('index.php?/api/v2/get_milestone/' + id.to_s), TestrailMilestone)
-      LoggerHelper.print_to_log('Initialized milestone: ' + milestone.name)
+      OnlyofficeLoggerHelper.log('Initialized milestone: ' + milestone.name)
       milestone
     end
 
@@ -215,7 +215,7 @@ module OnlyofficeTestrailWrapper
     # @param [String] description of milestone
     def create_new_milestone(name, description = '')
       new_milestone = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_milestone/' + @id.to_s, :name => StringHelper.warnstrip!(name.to_s), description => description), TestrailMilestone)
-      LoggerHelper.print_to_log 'Created new milestone: ' + new_milestone.name
+      OnlyofficeLoggerHelper.log 'Created new milestone: ' + new_milestone.name
       new_milestone
     end
 

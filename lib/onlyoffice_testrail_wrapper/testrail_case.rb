@@ -41,7 +41,7 @@ module OnlyofficeTestrailWrapper
 
     def delete
       @section.cases_names.delete @title
-      LoggerHelper.print_to_log 'Deleted test case: ' + @title
+      OnlyofficeLoggerHelper.log 'Deleted test case: ' + @title
       Testrail2.http_post 'index.php?/api/v2/delete_case/' + @id.to_s, {}
     end
 
@@ -54,7 +54,7 @@ module OnlyofficeTestrailWrapper
     def add_result(run_id, result, comment = '', custom_fields = {}, version = '')
       response = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_result_for_case/' + run_id.to_s + '/' + @id.to_s, { status_id: TestrailResult::RESULT_STATUSES[result],
                                                                                                                                                    comment: comment, version: version }.merge(custom_fields)), TestrailResult)
-      LoggerHelper.print_to_log "Set test case result: #{result}. URL: #{Testrail2.get_testrail_address}index.php?/tests/view/#{response.test_id}", output_colors[result]
+      OnlyofficeLoggerHelper.log "Set test case result: #{result}. URL: #{Testrail2.get_testrail_address}index.php?/tests/view/#{response.test_id}", output_colors[result]
       response
     end
 

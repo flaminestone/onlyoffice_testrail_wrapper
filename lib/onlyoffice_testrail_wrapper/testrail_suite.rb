@@ -59,7 +59,7 @@ module OnlyofficeTestrailWrapper
       parent_section = get_section_by_name(parent_section).id if parent_section.is_a?(String)
       new_section = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_section/' + @project_id.to_s, name: StringHelper.warnstrip!(name.to_s),
                                                                                                                                 parent_id: parent_section, suite_id: @id), TestrailSection)
-      LoggerHelper.print_to_log 'Created new section: ' + new_section.name
+      OnlyofficeLoggerHelper.log 'Created new section: ' + new_section.name
       @sections_names[new_section.name] = new_section.id
       new_section.instance_variable_set '@project_id', @project_id
       new_section.instance_variable_set '@suite', self
@@ -96,7 +96,7 @@ module OnlyofficeTestrailWrapper
 
     def delete
       Testrail2.http_post 'index.php?/api/v2/delete_suite/' + @id.to_s, {}
-      LoggerHelper.print_to_log 'Deleted suite: ' + @name
+      OnlyofficeLoggerHelper.log 'Deleted suite: ' + @name
       @project.suites_names.delete @name
       nil
     end
@@ -105,7 +105,7 @@ module OnlyofficeTestrailWrapper
       @project.suites_names.delete @name
       @project.suites_names[StringHelper.warnstrip!(name.to_s)] = @id
       updated_suite = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/update_suite/' + @id.to_s, name: name, description: description), TestrailSuite)
-      LoggerHelper.print_to_log 'Updated suite: ' + updated_suite.name
+      OnlyofficeLoggerHelper.log 'Updated suite: ' + updated_suite.name
       updated_suite
     end
   end

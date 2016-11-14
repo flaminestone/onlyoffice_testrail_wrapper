@@ -65,7 +65,7 @@ module OnlyofficeTestrailWrapper
 
     def close
       test_run = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/close_run/' + @id.to_s, {}), TestrailRun)
-      LoggerHelper.print_to_log 'Closed run: ' + @name
+      OnlyofficeLoggerHelper.log 'Closed run: ' + @name
       test_run
     end
 
@@ -110,14 +110,14 @@ module OnlyofficeTestrailWrapper
       @project.runs_names.delete @name
       @project.runs_names[StringHelper.warnstrip!(name.to_s)] = @id
       updated_plan = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/update_run/' + @id.to_s, name: name, description: description), TestrailRun)
-      LoggerHelper.print_to_log 'Updated run: ' + updated_plan.name
+      OnlyofficeLoggerHelper.log 'Updated run: ' + updated_plan.name
       updated_plan
     end
 
     def delete
       @project.runs_names.delete name
       Testrail2.http_post 'index.php?/api/v2/delete_run/' + @id.to_s, {}
-      LoggerHelper.print_to_log 'Deleted run: ' + @name
+      OnlyofficeLoggerHelper.log 'Deleted run: ' + @name
       nil
     end
 
@@ -128,7 +128,7 @@ module OnlyofficeTestrailWrapper
         test_data = test(current_test['id'])
         @test_results.merge!(test_data.title => test_data.get_results)
       end
-      LoggerHelper.print_to_log 'Get test results for run: ' + @name
+      OnlyofficeLoggerHelper.log 'Get test results for run: ' + @name
     end
 
     # Calculate duration of all tests in current spec in hours
