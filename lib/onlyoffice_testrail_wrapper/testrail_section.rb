@@ -36,7 +36,7 @@ module OnlyofficeTestrailWrapper
         get_case_by_id name_or_id
       when 'String'
         if name_or_id.to_s.length > 250
-          LoggerHelper.print_to_log("There is limit for testcase name for 250 symbols. '#{name_or_id}' too long. It will cut")
+          OnlyofficeLoggerHelper.log("There is limit for testcase name for 250 symbols. '#{name_or_id}' too long. It will cut")
           name_or_id = name_or_id.to_s[0..249]
         end
         init_case_by_name name_or_id
@@ -85,7 +85,7 @@ module OnlyofficeTestrailWrapper
       new_case = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_case/' + @id.to_s, title: StringHelper.warnstrip!(title.to_s), type_id: type_id,
                                                                                                                   priority_id: priority_id, custom_steps: custom_steps), TestrailCase)
       new_case.instance_variable_set('@section', self)
-      LoggerHelper.print_to_log "Created new case: #{new_case.title}"
+      OnlyofficeLoggerHelper.log "Created new case: #{new_case.title}"
       @cases_names[new_case.title] = new_case.id
       new_case
     end
@@ -94,14 +94,14 @@ module OnlyofficeTestrailWrapper
       @suite.sections_names.delete @name
       @suite.sections_names[StringHelper.warnstrip!(name.to_s)] = @id
       updated_section = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/update_section/' + @id.to_s, name: name, parent_id: parent_id), TestrailSection)
-      LoggerHelper.print_to_log 'Updated section: ' + updated_section.name
+      OnlyofficeLoggerHelper.log 'Updated section: ' + updated_section.name
       updated_section
     end
 
     def delete
       @suite.sections_names.delete @name
       Testrail2.http_post 'index.php?/api/v2/delete_section/' + @id.to_s, {}
-      LoggerHelper.print_to_log 'Deleted section: ' + @name
+      OnlyofficeLoggerHelper.log 'Deleted section: ' + @name
       nil
     end
   end

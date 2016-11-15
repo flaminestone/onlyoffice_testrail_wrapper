@@ -62,7 +62,6 @@ Style/Documentation:
     - 'spec/**/*'
     - 'test/**/*'
     - 'lib/onlyoffice_testrail_wrapper/helpers/hash_helper.rb'
-    - 'lib/onlyoffice_testrail_wrapper/helpers/logger_helper.rb'
     - 'lib/onlyoffice_testrail_wrapper/helpers/string_helper.rb'
     - 'lib/onlyoffice_testrail_wrapper/testrail_milestone.rb'
     - 'lib/onlyoffice_testrail_wrapper/testrail_plan.rb'

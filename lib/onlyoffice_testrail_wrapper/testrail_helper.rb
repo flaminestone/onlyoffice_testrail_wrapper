@@ -21,11 +21,11 @@ module OnlyofficeTestrailWrapper
         @bugzilla_helper = nil
       end
       if @in_debug
-        LoggerHelper.print_to_log 'Do not initialize Testrail, because spec run in debug'
+        OnlyofficeLoggerHelper.log 'Do not initialize Testrail, because spec run in debug'
         @run = TestrailRun.new
         return
       end
-      LoggerHelper.print_to_log 'Begin initializing Testrail...'
+      OnlyofficeLoggerHelper.log 'Begin initializing Testrail...'
       @suites_to_add = []
       @add_all_suites = true
       @search_plan_by_substring = false
@@ -43,25 +43,25 @@ module OnlyofficeTestrailWrapper
         @run = @project.init_run_by_name(run_name ? run_name.to_s : suite_name.to_s, @suite.id)
       end
       raise "Plan '#{@plan.name}' is completed! Cannot add results" if !@plan.nil? && @plan.is_completed
-      LoggerHelper.print_to_log 'Initializing complete!'
+      OnlyofficeLoggerHelper.log 'Initializing complete!'
     end
 
     def add_cases_to_suite(cases, section_name = 'All Test Cases')
       if @in_debug
-        LoggerHelper.print_to_log 'Do not add test result, because spec run in debug '
+        OnlyofficeLoggerHelper.log 'Do not add test result, because spec run in debug '
         return
       end
-      LoggerHelper.print_to_log 'Begin scanning ' + @suite.name + ' suite for new cases' unless cases.is_a?(Array)
+      OnlyofficeLoggerHelper.log 'Begin scanning ' + @suite.name + ' suite for new cases' unless cases.is_a?(Array)
       section = @suite.section section_name.to_s
       existing_cases = section.get_cases.map { |test_case| test_case['title'] }
       cases.each { |case_name| section.create_new_case case_name.to_s unless existing_cases.include?(case_name) }
-      LoggerHelper.print_to_log 'Suite scanning complete!'
+      OnlyofficeLoggerHelper.log 'Suite scanning complete!'
       @suite = @project.get_suite_by_id @suite.id
     end
 
     def add_result_to_test_case(example, comment = '', section_name = 'All Test Cases')
       if @in_debug
-        LoggerHelper.print_to_log 'Do not add test result, because spec run in debug '
+        OnlyofficeLoggerHelper.log 'Do not add test result, because spec run in debug '
         return
       end
       exception = example.exception
@@ -152,7 +152,7 @@ module OnlyofficeTestrailWrapper
     def init_run_in_plan(run_name)
       @plan.entries.each { |entry| @run = entry.runs.first if entry.name == run_name }
       @run = @plan.add_entry(run_name, @suite.id).runs.first if @run.nil?
-      LoggerHelper.print_to_log('Initialized run: ' + @run.name)
+      OnlyofficeLoggerHelper.log('Initialized run: ' + @run.name)
     end
 
     def get_plan_name_by_substring(string)

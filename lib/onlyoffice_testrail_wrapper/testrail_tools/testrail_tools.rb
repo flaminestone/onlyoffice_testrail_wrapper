@@ -70,7 +70,7 @@ module OnlyofficeTestrailWrapper
       check_config(__method__, :@project, :@plan)
       sorted_durations = plan.plan_durations
       sorted_durations.each do |run|
-        LoggerHelper.print_to_log "'#{run.first}' took about #{run[1]} hours"
+        OnlyofficeLoggerHelper.log "'#{run.first}' took about #{run[1]} hours"
       end
     end
 
