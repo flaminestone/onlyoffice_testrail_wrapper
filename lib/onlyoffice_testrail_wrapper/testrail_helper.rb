@@ -103,11 +103,7 @@ module OnlyofficeTestrailWrapper
       else
         result = :aborted
         comment += "\n" + exception.to_s
-        unless exception.backtrace.nil?
-          lines = StringHelper.get_string_elements_from_array(exception.backtrace, 'RubymineProjects')
-          lines.each_with_index { |e, i| lines[i] = e.to_s.sub(%r{.*RubymineProjects/}, '').gsub('`', " '") }
-          custom_fields[:custom_autotest_error_line] = lines.join("\r\n")
-        end
+        custom_fields[:custom_autotest_error_line] = exception.backtrace.join("\n") unless exception.backtrace.nil?
       end
       @last_case = example.description
       @suite.section(section_name).case(example.description).add_result @run.id, result, comment, custom_fields
