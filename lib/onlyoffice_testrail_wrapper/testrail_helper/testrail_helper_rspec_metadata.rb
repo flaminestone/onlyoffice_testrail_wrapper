@@ -18,6 +18,7 @@ module OnlyofficeTestrailWrapper
       custom_fields[:custom_js_error] = WebDriver.web_console_error unless WebDriver.web_console_error.nil?
       custom_fields[:elapsed] = example_time_in_seconds(example)
       custom_fields[:version] = version || @plan.try(:name)
+      custom_fields[:custom_host] = SystemHelper.hostname
       custom_fields[:custom_screenshot_link] = screenshot_link if example.exception
       custom_fields
     end
