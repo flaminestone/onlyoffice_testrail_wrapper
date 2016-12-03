@@ -4,6 +4,7 @@ require_relative 'testrail_helper/testrail_helper_rspec_metadata'
 require_relative 'testrail'
 require_relative 'helpers/bugzilla_helper'
 require_relative 'helpers/ruby_helper'
+require_relative 'helpers/system_helper'
 
 module OnlyofficeTestrailWrapper
   # Class with help methods with testrail
