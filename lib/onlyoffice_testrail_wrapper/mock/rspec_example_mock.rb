@@ -8,6 +8,11 @@ module OnlyofficeTestrailWrapper
     end
   end
 
+  # Class for mocking rspec result metadata
+  class RspecExceptionResultMock
+    attr_accessor :started_at
+  end
+
   # Mock Rspec example
   class RspecExampleMock
     attr_accessor :exception
@@ -19,7 +24,7 @@ module OnlyofficeTestrailWrapper
     def initialize(description: 'MockDescription',
                    exception: RspecExceptionMock.new)
       @exception = exception
-      @metadata = {}
+      @metadata = { execution_result: RspecExceptionResultMock.new }
       @pending = false
       @description = description
       @section = ''
