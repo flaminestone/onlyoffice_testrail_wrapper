@@ -71,7 +71,7 @@ module OnlyofficeTestrailWrapper
 
     def test(name_or_id)
       case name_or_id.class.to_s
-      when 'Fixnum'
+      when 'Fixnum', 'Integer'
         get_test_by_id name_or_id
       when 'String'
         get_test_by_name name_or_id
