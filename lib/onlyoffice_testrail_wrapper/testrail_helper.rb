@@ -126,18 +126,6 @@ module OnlyofficeTestrailWrapper
       @project.plan(get_plan_name_by_substring(plan_name.to_s)).delete
     end
 
-    def add_merged_results(test_result_array)
-      merged_results = merge_results(test_result_array)
-      merged_results.keys.each do |current_run|
-        merged_results[current_run].keys.each do |current_case|
-          merged_results[current_run][current_case].each do |current_test_result|
-            current_entry = @plan.entries.find { |cur_entry| cur_entry.name == current_run }
-            current_entry.runs.first.test(current_case).add_result(current_test_result.status_id, current_test_result.comment)
-          end
-        end
-      end
-    end
-
     def mark_rest_environment_dependencies(supported_test_list, status_to_mark = :lpv)
       get_incomplete_tests.each do |current_test|
         add_result_by_case_name(current_test, status_to_mark, 'Not supported on this test environment') unless supported_test_list.include?(current_test)
@@ -172,21 +160,6 @@ module OnlyofficeTestrailWrapper
 
     def suites_to_add_hash(suites_names)
       suites_names.map { |suite| all_suites_names.include?(suite) ? { 'suite_id' => @project.suites_names[suite] } : { 'suite_id' => @project.create_new_suite(suite).id } }
-    end
-
-    def merge_results(results_array)
-      merged_results = {}
-      run_names_array = results_array.collect(&:keys).flatten.uniq
-      run_names_array.each do |current_run_name|
-        result_hash = {}
-        results_array.each do |current_result|
-          second_hash = current_result[current_run_name]
-          result_hash.merge!(second_hash) { |_key, old_value, new_value| old_value | new_value }
-          result_hash
-        end
-        merged_results[current_run_name] = result_hash
-      end
-      merged_results
     end
   end
 end
