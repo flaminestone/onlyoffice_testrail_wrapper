@@ -30,13 +30,13 @@ module OnlyofficeTestrailWrapper
 
     def self.get_all_plans_younger_than(time)
       check_config(__method__, :@project)
-      project.get_plans(is_completed: 0).reject { |e| e['is_completed'] || e['created_on'] < time.to_i }
+      project.get_plans(is_completed: 0).reject { |e| e['created_on'] < time.to_i }
     end
 
     def self.close_all_runs_older_than(time)
       check_config(__method__, :@project)
       loop do
-        old_runs = project.get_runs(is_completed: 0).reject { |e| e['is_completed'] || e['created_on'] > time.to_i }
+        old_runs = project.get_runs(is_completed: 0).reject { |e| e['created_on'] > time.to_i }
         return if old_runs.empty?
         old_runs.each { |run| Testrail2.http_post('index.php?/api/v2/close_run/' + run['id'].to_s, {}) }
       end
@@ -45,7 +45,7 @@ module OnlyofficeTestrailWrapper
     def self.close_all_plans_older_than(time)
       check_config(__method__, :@project)
       loop do
-        old_plans = project.get_plans.reject { |e| e['is_completed'] || e['created_on'] > time.to_i }
+        old_plans = project.get_plans(is_completed: 0).reject { |e| e['created_on'] > time.to_i }
         return if old_plans.empty?
         old_plans.each { |run| Testrail2.http_post('index.php?/api/v2/close_plan/' + run['id'].to_s, {}) }
       end
