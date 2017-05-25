@@ -13,6 +13,6 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/onlyoffice-testing-robot/onlyoffice_testrail_wrapper'
   s.add_runtime_dependency('activesupport', '~> 4.0')
   s.add_runtime_dependency('net-ping', '~> 2')
-  s.add_runtime_dependency('onlyoffice_logger_helper', '1.0.0')
+  s.add_runtime_dependency('onlyoffice_logger_helper', '~> 1')
   s.license = 'AGPL-3.0'
 end
