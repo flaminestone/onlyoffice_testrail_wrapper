@@ -1,4 +1,3 @@
-# encoding: utf-8
 # @author Roman.Zagudaev
 # lib for working with http queries
 
@@ -165,7 +164,7 @@ module OnlyofficeTestrailWrapper
           attempts += 1
           retry if attempts < 3
           raise 'Timeout error after 3 attempts'
-        rescue Exception => e
+        rescue StandardError => e
           raise e
         end
         return response
