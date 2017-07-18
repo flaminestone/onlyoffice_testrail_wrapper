@@ -21,7 +21,7 @@ module OnlyofficeTestrailWrapper
   class Testrail2
     # @return [String] address of testrail
     # TESTRAIL_DIGITALOCEAN = 'http://107.170.125.157/testrail/'
-    @testrail_url = 'http://107.170.125.157/testrail/'
+    @testrail_url = 'http://192.241.186.105/testrail/'
 
     # @return [String] login for admin user
     @admin_user = nil
