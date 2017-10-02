@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require_relative 'testrail_helper/testrail_helper_rspec_metadata'
 require_relative 'testrail'
 require_relative 'helpers/bugzilla_helper'
