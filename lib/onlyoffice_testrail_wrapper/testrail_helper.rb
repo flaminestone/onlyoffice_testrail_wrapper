@@ -146,7 +146,7 @@ module OnlyofficeTestrailWrapper
     def all_suites_names
       @suites ? (return @suites) : @suites = []
       @project.get_suites
-      @project.suites_names.each { |key, _| @suites << key }
+      @project.suites_names.each_key { |key| @suites << key }
       @suites.sort!
     end
 
