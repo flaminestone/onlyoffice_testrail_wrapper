@@ -83,7 +83,7 @@ module OnlyofficeTestrailWrapper
     # @return [Array] array of durations, sorted by descrease
     def plan_durations
       durations_hash = {}
-      [runs[0], runs[1]].each do |current_run|
+      runs.each do |current_run|
         durations_hash[current_run.name] = current_run.duration
       end
       durations_hash.sort_by { |_, time| time }.reverse
