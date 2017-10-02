@@ -160,7 +160,7 @@ module OnlyofficeTestrailWrapper
         attempts = 0
         begin
           response = http.request(request)
-        rescue TimeoutError
+        rescue Timeout::Error
           attempts += 1
           retry if attempts < 3
           raise 'Timeout error after 3 attempts'
