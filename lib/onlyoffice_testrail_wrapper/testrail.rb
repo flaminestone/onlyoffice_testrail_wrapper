@@ -36,8 +36,8 @@ module OnlyofficeTestrailWrapper
 
     class << self
       attr_accessor :testrail_url
-      attr_accessor :admin_user
-      attr_accessor :admin_pass
+      attr_writer :admin_user
+      attr_writer :admin_pass
 
       def read_keys
         @admin_user = ENV['TESTRAIL_USER']
