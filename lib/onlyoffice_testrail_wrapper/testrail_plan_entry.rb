@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module OnlyofficeTestrailWrapper
   class TestrailPlanEntry
     attr_accessor :suite_id, :name, :assigned_to, :include_all, :case_ids, :runs

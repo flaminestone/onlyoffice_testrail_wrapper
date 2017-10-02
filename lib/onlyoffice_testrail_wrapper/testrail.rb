@@ -36,8 +36,8 @@ module OnlyofficeTestrailWrapper
 
     class << self
       attr_accessor :testrail_url
-      attr_accessor :admin_user
-      attr_accessor :admin_pass
+      attr_writer :admin_user
+      attr_writer :admin_pass
 
       def read_keys
         @admin_user = ENV['TESTRAIL_USER']
@@ -160,7 +160,7 @@ module OnlyofficeTestrailWrapper
         attempts = 0
         begin
           response = http.request(request)
-        rescue TimeoutError
+        rescue Timeout::Error
           attempts += 1
           retry if attempts < 3
           raise 'Timeout error after 3 attempts'

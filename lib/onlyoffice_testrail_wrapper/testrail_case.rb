@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module OnlyofficeTestrailWrapper
   # @author Roman.Zagudaev
   # Class for description of test case
