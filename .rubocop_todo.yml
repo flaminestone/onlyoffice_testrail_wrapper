@@ -102,9 +102,3 @@ Style/Encoding:
     - 'lib/onlyoffice_testrail_wrapper/testrail_run.rb'
     - 'lib/onlyoffice_testrail_wrapper/testrail_section.rb'
     - 'lib/onlyoffice_testrail_wrapper/testrail_test.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/OrAssignment:
-  Exclude:
-    - 'lib/onlyoffice_testrail_wrapper/testrail_helper.rb'
