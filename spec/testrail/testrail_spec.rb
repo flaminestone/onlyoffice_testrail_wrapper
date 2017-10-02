@@ -46,6 +46,10 @@ describe OnlyofficeTestrailWrapper::Testrail2 do
         OnlyofficeTestrailWrapper::Testrail2.testrail_url = 'www.ya.ru'
         expect(OnlyofficeTestrailWrapper::Testrail2.new).not_to be_available
       end
+
+      after do
+        OnlyofficeTestrailWrapper::Testrail2.testrail_url = 'http://192.241.186.105/testrail/'
+      end
     end
   end
 end
