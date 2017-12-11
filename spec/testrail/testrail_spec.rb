@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe OnlyofficeTestrailWrapper::Testrail2 do
+  old_url = nil
   describe 'Methods Tests' do
     let(:project) { OnlyofficeTestrailWrapper::Testrail2.new.project('Canvas Document Editor Autotests') }
     plan = 'ver. 5.0.5 (build:26)'
@@ -39,6 +40,11 @@ describe OnlyofficeTestrailWrapper::Testrail2 do
 
   describe 'Availability' do
     describe 'available?' do
+      before do
+        OnlyofficeTestrailWrapper::Testrail2.new
+        old_url = OnlyofficeTestrailWrapper::Testrail2.testrail_url
+      end
+
       it 'check availability of correct connection' do
         expect(OnlyofficeTestrailWrapper::Testrail2.new).to be_available
       end
@@ -49,7 +55,7 @@ describe OnlyofficeTestrailWrapper::Testrail2 do
       end
 
       after do
-        OnlyofficeTestrailWrapper::Testrail2.testrail_url = 'http://138.197.115.6/testrail/'
+        OnlyofficeTestrailWrapper::Testrail2.testrail_url = old_url
       end
     end
   end
