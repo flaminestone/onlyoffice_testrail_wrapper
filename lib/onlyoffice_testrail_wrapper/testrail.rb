@@ -4,6 +4,7 @@
 require 'net/http'
 require 'json'
 require 'net/ping'
+require 'yaml'
 require_relative 'testrail_project'
 
 module OnlyofficeTestrailWrapper
@@ -20,9 +21,7 @@ module OnlyofficeTestrailWrapper
   # end1
   class Testrail2
     # @return [String] address of testrail
-    # TESTRAIL_DIGITALOCEAN = 'http://107.170.125.157/testrail/'
-    @testrail_url = 'http://138.197.115.6/testrail/'
-
+    @testrail_url = nil
     # @return [String] login for admin user
     @admin_user = nil
     # @return [String] password for admin user
@@ -40,12 +39,15 @@ module OnlyofficeTestrailWrapper
       attr_writer :admin_pass
 
       def read_keys
+        @testrail_url = ENV['TESTRAIL_URL']
         @admin_user = ENV['TESTRAIL_USER']
         @admin_pass = ENV['TESTRAIL_PASSWORD']
         return unless @admin_user.nil? && @admin_pass.nil?
         begin
-          @admin_user = File.read(Dir.home + '/.testrail/user').delete("\n")
-          @admin_pass = File.read(Dir.home + '/.testrail/password').delete("\n")
+          yaml = YAML.load_file(Dir.home + '/.gem-onlyoffice_testrail_wrapper/config.yml')
+          @testrail_url = yaml['url']
+          @admin_user = yaml['user']
+          @admin_pass = yaml['password']
         rescue Errno::ENOENT
           raise Errno::ENOENT, "No user of passwords found in #{Dir.home}/.testrail/ directory. Please create files #{Dir.home}/.testrail/user and #{Dir.home}/.testrail/password"
         end
@@ -62,6 +64,7 @@ module OnlyofficeTestrailWrapper
       end
 
       def get_testrail_address
+        read_keys unless testrail_url
         testrail_url
       end
 
