@@ -159,7 +159,8 @@ module OnlyofficeTestrailWrapper
       request.basic_auth admin_user, admin_pass
       request.delete 'content-type'
       request.add_field 'content-type', 'application/json'
-      Net::HTTP.start(uri.host, uri.port) do |http|
+      is_ssl = (uri.scheme == 'https')
+      Net::HTTP.start(uri.host, uri.port, use_ssl: is_ssl) do |http|
         attempts = 0
         begin
           response = http.request(request)
