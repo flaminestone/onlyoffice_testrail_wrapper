@@ -15,10 +15,9 @@ module OnlyofficeTestrailWrapper
     # Get status of bug
     # @param bug_id [String, Integer] id of bug
     # @return [String] status of bug
-    def bug_status(bud_id)
-      res = Net::HTTP.start(@bugzilla_url, 80) do |http|
-        http.get("/rest/bug/#{bud_id}?api_key=#{@key}")
-      end
+    def bug_status(bug_id)
+      res = get_bug_result(bug_id, 80)
+      res = get_bug_result(bug_id, 443) if response_redirect?(res)
       parsed_json = JSON.parse(res.body)
       parsed_json['bugs'].first['status']
     end
@@ -42,6 +41,29 @@ module OnlyofficeTestrailWrapper
     rescue Errno::ENOENT
       raise Errno::ENOENT, "No access token found in #{Dir.home}/.bugzilla/api_key" \
       "Please create files #{Dir.home}/.bugzilla/api_key"
+    end
+
+    private
+
+    # @param id [Integer] id of bug
+    # @return [String] url of bug on server with api key
+    def bug_url(id)
+      "/rest/bug/#{id}?api_key=#{@key}"
+    end
+
+    # @param bug_id [Integer] id of bug
+    # @param port [Integer] port of server
+    # @return [Net::HTTPResponse] result of request
+    def get_bug_result(bug_id, port)
+      Net::HTTP.start(@bugzilla_url, port, use_ssl: (port == 443)) do |http|
+        http.get(bug_url(bug_id))
+      end
+    end
+
+    # @param response [Net::HTTPResponse] to check
+    # @return [Boolean] is response - redirect
+    def response_redirect?(response)
+      response.header['location']
     end
   end
 end
