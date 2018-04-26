@@ -149,7 +149,7 @@ module OnlyofficeTestrailWrapper
     def available?
       get_projects
       true
-    rescue
+    rescue StandardError
       false
     end
 
