@@ -7,7 +7,7 @@ module OnlyofficeTestrailWrapper
       status.each do |current_status|
         unless current_status.is_a?(Symbol)
           raise "Founded status '#{current_status}' is a '#{current_status.class}'! " \
-                "All statuses must be symbols"
+                'All statuses must be symbols'
         end
         raise 'One or some statuses is not found. Pls, check it' unless TestrailResult::RESULT_STATUSES.keys.include?(current_status)
       end
