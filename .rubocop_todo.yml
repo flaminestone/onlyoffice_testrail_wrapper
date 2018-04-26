@@ -64,13 +64,6 @@ Style/Documentation:
     - 'lib/onlyoffice_testrail_wrapper/testrail_test.rb'
     - 'lib/onlyoffice_testrail_wrapper/testrail_tools/testrail_tools.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: MinSize.
-# SupportedStyles: percent, brackets
-Style/SymbolArray:
-  EnforcedStyle: brackets
-
 # Offense count: 167
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
