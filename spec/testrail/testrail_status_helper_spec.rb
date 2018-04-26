@@ -23,10 +23,10 @@ describe OnlyofficeTestrailWrapper::TestrailHelperRspecMetadata do
   end
 
   it 'check check_status_exist is not work with incorrect data' do
-    expect {check_status_exist('wrong data')}.to raise_error(RuntimeError, 'Founded status \'wrong data\' is a \'String\'! All statuses must be symbols')
+    expect { check_status_exist('wrong data') }.to raise_error(RuntimeError, 'Founded status \'wrong data\' is a \'String\'! All statuses must be symbols')
   end
 
   it 'check check_status_exist is not work with incorrect data - not existed status' do
-    expect {check_status_exist(:not_existed_status)}.to raise_error(RuntimeError, 'One or some statuses is not found. Pls, check it')
+    expect { check_status_exist(:not_existed_status) }.to raise_error(RuntimeError, 'One or some statuses is not found. Pls, check it')
   end
 end
