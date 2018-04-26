@@ -66,12 +66,6 @@ Style/Documentation:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-Style/ExpandPathArguments:
-  Exclude:
-    - 'onlyoffice_testrail_wrapper.gemspec'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 Style/LineEndConcatenation:
   Exclude:
     - 'lib/onlyoffice_testrail_wrapper/testrail_helper/testrail_status_helper.rb'
