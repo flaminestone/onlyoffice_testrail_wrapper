@@ -1,7 +1,7 @@
+require 'onlyoffice_bugzilla_helper'
 require_relative 'testrail_helper/testrail_helper_rspec_metadata'
 require_relative 'testrail_helper/testrail_status_helper'
 require_relative 'testrail'
-require_relative 'helpers/bugzilla_helper'
 require_relative 'helpers/ruby_helper'
 require_relative 'helpers/system_helper'
 
@@ -17,7 +17,7 @@ module OnlyofficeTestrailWrapper
     def initialize(project_name, suite_name = nil, plan_name = nil, run_name = nil)
       @in_debug = debug?
       begin
-        @bugzilla_helper = BugzillaHelper.new
+        @bugzilla_helper = OnlyofficeBugzillaHelper::BugzillaHelper.new
       rescue Errno::ENOENT
         @bugzilla_helper = nil
       end
