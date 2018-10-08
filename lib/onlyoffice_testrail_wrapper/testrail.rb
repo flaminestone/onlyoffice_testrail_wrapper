@@ -37,6 +37,8 @@ module OnlyofficeTestrailWrapper
       attr_accessor :testrail_url
       attr_writer :admin_user
       attr_writer :admin_pass
+      # @return [String] default config location
+      CONFIG_LOCATION = "#{Dir.home}/.gem-onlyoffice_testrail_wrapper/config.yml".freeze
 
       def read_keys
         @testrail_url = ENV['TESTRAIL_URL']
@@ -44,12 +46,12 @@ module OnlyofficeTestrailWrapper
         @admin_pass = ENV['TESTRAIL_PASSWORD']
         return unless @admin_user.nil? && @admin_pass.nil?
         begin
-          yaml = YAML.load_file(Dir.home + '/.gem-onlyoffice_testrail_wrapper/config.yml')
+          yaml = YAML.load_file(CONFIG_LOCATION)
           @testrail_url = yaml['url']
           @admin_user = yaml['user']
           @admin_pass = yaml['password']
         rescue Errno::ENOENT
-          raise Errno::ENOENT, "No user of passwords found in #{Dir.home}/.testrail/ directory. Please create files #{Dir.home}/.testrail/user and #{Dir.home}/.testrail/password"
+          raise Errno::ENOENT, "No user of passwords found in #{CONFIG_LOCATION}. Please create correct config"
         end
       end
 
