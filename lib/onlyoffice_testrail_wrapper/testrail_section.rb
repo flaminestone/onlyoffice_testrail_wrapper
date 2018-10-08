@@ -62,6 +62,7 @@ module OnlyofficeTestrailWrapper
       get_cases if @cases_names.nil?
       corrected_case_name = StringHelper.warnstrip!(name.to_s)
       return nil if @cases_names[corrected_case_name].nil?
+
       get_case_by_id(@cases_names[corrected_case_name])
     end
 

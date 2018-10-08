@@ -13,17 +13,6 @@ Gemspec/RequiredRubyVersion:
   Exclude:
     - 'onlyoffice_testrail_wrapper.gemspec'
 
-# Offense count: 14
-# Cop supports --auto-correct.
-Layout/EmptyLineAfterGuardClause:
-  Exclude:
-    - 'lib/onlyoffice_testrail_wrapper/helpers/hash_helper.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_helper.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_helper/testrail_helper_rspec_metadata.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_section.rb'
-    - 'lib/onlyoffice_testrail_wrapper/testrail_tools/testrail_tools.rb'
-
 # Offense count: 1
 # Configuration parameters: ContextCreatingMethods, MethodCreatingMethods.
 Lint/UselessAccessModifier:

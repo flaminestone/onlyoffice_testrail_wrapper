@@ -45,6 +45,7 @@ module OnlyofficeTestrailWrapper
         @admin_user = ENV['TESTRAIL_USER']
         @admin_pass = ENV['TESTRAIL_PASSWORD']
         return unless @admin_user.nil? && @admin_pass.nil?
+
         begin
           yaml = YAML.load_file(CONFIG_LOCATION)
           @testrail_url = yaml['url']
@@ -90,6 +91,7 @@ module OnlyofficeTestrailWrapper
         request.body = data_hash.to_json
         response = send_request(uri, request)
         return if response.body == ''
+
         JSON.parse response.body
       end
     end

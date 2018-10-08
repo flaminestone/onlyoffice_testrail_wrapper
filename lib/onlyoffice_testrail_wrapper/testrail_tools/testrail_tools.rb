@@ -38,6 +38,7 @@ module OnlyofficeTestrailWrapper
       loop do
         old_runs = project.get_runs(is_completed: 0).reject { |e| e['created_on'] > time.to_i }
         return if old_runs.empty?
+
         old_runs.each { |run| Testrail2.http_post('index.php?/api/v2/close_run/' + run['id'].to_s, {}) }
       end
     end
@@ -47,6 +48,7 @@ module OnlyofficeTestrailWrapper
       loop do
         old_plans = project.get_plans(is_completed: 0).reject { |e| e['created_on'] > time.to_i }
         return if old_plans.empty?
+
         old_plans.each { |run| Testrail2.http_post('index.php?/api/v2/close_plan/' + run['id'].to_s, {}) }
       end
     end
@@ -94,6 +96,7 @@ module OnlyofficeTestrailWrapper
 
     def self.check_config(*args)
       return if @testrail_config && (@testrail_config.instance_variables & args[1..-1]) == args[1..-1]
+
       raise "Method: #{args.shift} - some of needed parameters are missing: #{args.join(', ')}. To configure them, type:\n
              TestrailTools.configure do |config|\n\t\tconfig.param_name = value\n\tend"
     end
