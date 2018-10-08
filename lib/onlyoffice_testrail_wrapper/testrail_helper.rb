@@ -37,6 +37,7 @@ module OnlyofficeTestrailWrapper
         @plan ||= @project.create_new_plan(plan_name, suites_to_add_hash(@add_all_suites ? all_suites_names : @suites_to_add))
       end
       return if suite_name.nil?
+
       @suite = @project.suite suite_name.to_s
       if @plan
         init_run_in_plan(suite_name.to_s)
@@ -44,6 +45,7 @@ module OnlyofficeTestrailWrapper
         @run = @project.init_run_by_name(run_name ? run_name.to_s : suite_name.to_s, @suite.id)
       end
       raise "Plan '#{@plan.name}' is completed! Cannot add results" if !@plan.nil? && @plan.is_completed
+
       OnlyofficeLoggerHelper.log 'Initializing complete!'
     end
 
@@ -157,6 +159,7 @@ module OnlyofficeTestrailWrapper
 
     def ignore_case?(example_metadata)
       raise 'Ignore parameters must be Hash!!' unless @ignore_parameters.instance_of?(Hash)
+
       @ignore_parameters.each { |key, value| return { key => value } if example_metadata[key] == value }
       false
     end
