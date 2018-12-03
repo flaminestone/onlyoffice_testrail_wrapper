@@ -44,7 +44,7 @@ module OnlyofficeTestrailWrapper
       else
         @run = @project.init_run_by_name(run_name ? run_name.to_s : suite_name.to_s, @suite.id)
       end
-      raise "Plan '#{@plan.name}' is completed! Cannot add results" if !@plan.nil? && @plan.is_completed
+      raise "Plan '#{@plan.name}' is completed! Cannot add results. See #{@plan.url}" if !@plan.nil? && @plan.is_completed
 
       OnlyofficeLoggerHelper.log 'Initializing complete!'
     end
