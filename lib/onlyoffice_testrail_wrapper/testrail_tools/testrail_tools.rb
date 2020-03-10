@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../testrail'
 
 #  USAGE
@@ -75,8 +77,6 @@ module OnlyofficeTestrailWrapper
         OnlyofficeLoggerHelper.log "'#{run.first}' took about #{run[1]} hours"
       end
     end
-
-    private_class_method
 
     def self.project
       @project ||= Testrail2.new.project(@testrail_config.project)

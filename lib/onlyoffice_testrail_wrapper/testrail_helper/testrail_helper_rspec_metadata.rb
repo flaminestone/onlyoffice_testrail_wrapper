@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module OnlyofficeTestrailWrapper
   # Module for working with rspec metadata
   module TestrailHelperRspecMetadata
     # @return [String] version of tested app
     def version
       return @version if @version
-      return @plan.name if @plan && @plan.name
+      return @plan.name if @plan&.name
 
       'Unknown'
     end
