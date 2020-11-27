@@ -28,6 +28,7 @@ module OnlyofficeTestrailWrapper
     # @return [String] password for admin user
     @admin_pass = nil
 
+    # @return [Hash] project information
     attr_accessor :projects_names
 
     def initialize
@@ -36,8 +37,11 @@ module OnlyofficeTestrailWrapper
 
     class << self
       attr_accessor :testrail_url
+      # Attribute to write admin_user
       attr_writer :admin_user
+      # Attribute to write admin_pass
       attr_writer :admin_pass
+
       # @return [String] default config location
       CONFIG_LOCATION = "#{Dir.home}/.gem-onlyoffice_testrail_wrapper/config.yml"
 
@@ -121,7 +125,7 @@ module OnlyofficeTestrailWrapper
     def create_new_project(name, announcement = '', show_announcement = true)
       new_project = HashHelper.parse_to_class_variable(Testrail2.http_post('index.php?/api/v2/add_project', name: StringHelper.warnstrip!(name.to_s), announcement: announcement,
                                                                                                             show_announcement: show_announcement), TestrailProject)
-      OnlyofficeLoggerHelper.log 'Created new project: ' + new_project.name
+      OnlyofficeLoggerHelper.log "Created new project: #{new_project.name}"
       new_project.instance_variable_set('@testrail', self)
       @projects_names[new_project.name] = new_project.id
       new_project
@@ -138,8 +142,8 @@ module OnlyofficeTestrailWrapper
     # Get all projects on testrail
     # @return [Array, ProjectTestrail] array of projects
     def get_project_by_id(id)
-      project = HashHelper.parse_to_class_variable(Testrail2.http_get('index.php?/api/v2/get_project/' + id.to_s), TestrailProject)
-      OnlyofficeLoggerHelper.log('Initialized project: ' + project.name)
+      project = HashHelper.parse_to_class_variable(Testrail2.http_get("index.php?/api/v2/get_project/#{id}"), TestrailProject)
+      OnlyofficeLoggerHelper.log("Initialized project: #{project.name}")
       project.instance_variable_set('@testrail', self)
       project
     end

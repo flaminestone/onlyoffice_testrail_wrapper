@@ -6,17 +6,10 @@ require:
 inherit_from:
     - .rubocop_todo.yml
 
-Lint/RaiseException:
-  Enabled: true
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.5
 
-Lint/StructNewOverride:
-  Enabled: true
-
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
+# Used for variables like `:passed_2`
+Naming/VariableNumber:
+  EnforcedStyle: snake_case
