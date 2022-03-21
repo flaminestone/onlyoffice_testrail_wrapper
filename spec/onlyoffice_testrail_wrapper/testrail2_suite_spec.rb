@@ -12,6 +12,16 @@ describe OnlyofficeTestrailWrapper::Testrail2, '#suite' do
     suite.delete
   end
 
+  it 'Suite can be accessed via id' do
+    suite = project.create_new_suite(suite_name)
+    expect(project.suite(suite.id)).to be_a(OnlyofficeTestrailWrapper::TestrailSuite)
+    suite.delete
+  end
+
+  it 'Getting suite by not id or string will raise an error' do
+    expect { project.suite(Object.new) }.to raise_error(RuntimeError, /Wrong argument/)
+  end
+
   it 'Suite can be deleted' do
     suite = project.create_new_suite(suite_name)
     suite.delete
