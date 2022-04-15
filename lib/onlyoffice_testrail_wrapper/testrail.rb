@@ -20,7 +20,7 @@ module OnlyofficeTestrailWrapper
   #  current_test.add_result(Testrail2::TEST_RESULT_OK, 'description','version')
   #  incomplete_test = test_run_from_api.get_incomplete_tests()
   # end1
-  class Testrail2
+  class Testrail2 < TestrailApiObject
     # @return [String] address of testrail
     @testrail_url = nil
     # @return [String] login for admin user
@@ -32,6 +32,7 @@ module OnlyofficeTestrailWrapper
     attr_accessor :projects_names
 
     def initialize
+      super()
       @projects_names = {}
     end
 
@@ -118,7 +119,7 @@ module OnlyofficeTestrailWrapper
     # @return [Array, ProjectTestrail] array of projects
     def get_projects
       projects = Testrail2.http_get 'index.php?/api/v2/get_projects'
-      @projects_names = HashHelper.get_hash_from_array_with_two_parameters(projects, 'name', 'id') if @projects_names.empty?
+      @projects_names = name_id_pairs(projects) if @projects_names.empty?
       projects
     end
 
