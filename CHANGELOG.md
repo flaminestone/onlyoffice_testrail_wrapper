@@ -24,6 +24,14 @@
 * `--fail-fast` option for rspec by default
 * Replace usage of `HashHelper.get_hash_from_array_with_two_parameters`
   with `TestrailApiObject#name_id_pairs`
+* Remove unused `TestrailHelper#ignored_parameters`,
+  `TestrailHelper#add_result_by_case_name`,
+  `TestrailHelper#mark_rest_environment_dependencies`,
+  `TestrailHelper#delete_plan`,
+  `TestrailHelper#search_plan_by_substring`,
+  `TestrailHelper#get_plan_name_by_substring`,
+  `TestrailHelper#get_tests_by_result`
+  `TestrailStatusHelper#check_status_exist`
 
 ## 0.3.0 (2021-04-05)
 

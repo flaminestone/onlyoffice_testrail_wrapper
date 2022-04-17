@@ -2,7 +2,6 @@
 
 require 'onlyoffice_bugzilla_helper'
 require_relative 'testrail_helper/testrail_helper_rspec_metadata'
-require_relative 'testrail_helper/testrail_status_helper'
 require_relative 'testrail'
 require_relative 'helpers/ruby_helper'
 require_relative 'helpers/system_helper'
@@ -12,9 +11,8 @@ module OnlyofficeTestrailWrapper
   class TestrailHelper
     include RubyHelper
     include TestrailHelperRspecMetadata
-    include TestrailStatusHelper
     attr_reader :project, :plan, :suite, :run
-    attr_accessor :add_all_suites, :ignore_parameters, :suites_to_add, :search_plan_by_substring, :in_debug, :version
+    attr_accessor :add_all_suites, :suites_to_add, :in_debug, :version
 
     def initialize(project_name, suite_name = nil, plan_name = nil, run_name = nil)
       @in_debug = debug?
@@ -31,11 +29,10 @@ module OnlyofficeTestrailWrapper
       OnlyofficeLoggerHelper.log 'Begin initializing Testrail...'
       @suites_to_add = []
       @add_all_suites = true
-      @search_plan_by_substring = false
       yield(self) if block_given?
       @project = Testrail2.new.project project_name.to_s.dup
       if plan_name
-        @plan = @project.get_plan_by_name(search_plan_by_substring ? get_plan_name_by_substring(plan_name.to_s) : plan_name.to_s)
+        @plan = @project.get_plan_by_name(plan_name.to_s)
         @plan ||= @project.create_new_plan(plan_name, suites_to_add_hash(@add_all_suites ? all_suites_names : @suites_to_add))
       end
       return if suite_name.nil?
@@ -71,10 +68,7 @@ module OnlyofficeTestrailWrapper
       end
       exception = example.exception
       custom_fields = init_custom_fields(example)
-      if @ignore_parameters && (ignored_hash = ignore_case?(example.metadata))
-        comment += "\nTest ignored by #{ignored_hash}"
-        result = :blocked
-      elsif example.pending
+      if example.pending
         result, comment, bug_id = parse_pending_comment(example.execution_result.pending_message)
         if example.exception.to_s == 'Expected example to fail since it is pending, but it passed.'
           result = :failed
@@ -114,29 +108,8 @@ module OnlyofficeTestrailWrapper
       @suite.section(section_name).case(example.description).add_result @run.id, result, comment, custom_fields
     end
 
-    def add_result_by_case_name(name, result, comment = 'ok', section_name = 'All Test Cases')
-      @suite.section(section_name).case(name.to_s).add_result(@run.id, result, comment)
-    end
-
     def get_incomplete_tests
       @run.get_tests.map { |test| test['title'] if test['status_id'] == 3 || test['status_id'] == 4 }.compact
-    end
-
-    # @param [Array] result. Example: [:retest, :passed]
-    def get_tests_by_result(result)
-      check_status_exist(result)
-      result = [result] unless result.is_a?(Array)
-      @run.get_tests.map { |test| test['title'] if result.include?(TestrailResult::RESULT_STATUSES.key(test['status_id'])) }.compact
-    end
-
-    def delete_plan(plan_name)
-      @project.plan(get_plan_name_by_substring(plan_name.to_s)).delete
-    end
-
-    def mark_rest_environment_dependencies(supported_test_list, status_to_mark = :lpv)
-      get_incomplete_tests.each do |current_test|
-        add_result_by_case_name(current_test, status_to_mark, 'Not supported on this test environment') unless supported_test_list.include?(current_test)
-      end
     end
 
     private
@@ -147,23 +120,11 @@ module OnlyofficeTestrailWrapper
       OnlyofficeLoggerHelper.log("Initialized run: #{@run.name}")
     end
 
-    def get_plan_name_by_substring(string)
-      @project.get_plans.each { |plan| return plan['name'] if plan['name'].include?(string) }
-      string
-    end
-
     def all_suites_names
       @suites ? (return @suites) : @suites = []
       @project.get_suites
       @project.suites_names.each_key { |key| @suites << key }
       @suites.sort!
-    end
-
-    def ignore_case?(example_metadata)
-      raise 'Ignore parameters must be Hash!!' unless @ignore_parameters.instance_of?(Hash)
-
-      @ignore_parameters.each { |key, value| return { key => value } if example_metadata[key] == value }
-      false
     end
 
     def suites_to_add_hash(suites_names)
