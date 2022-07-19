@@ -56,7 +56,7 @@ module OnlyofficeTestrailWrapper
 
     def self.get_tests_report(status)
       check_config(__method__, :@project, :@plan)
-      { plan.name => plan.entries.inject({}) { |a, e| a.merge!({ e.name => e.runs.first.get_tests.map { |test| test['title'] if TestrailResult::RESULT_STATUSES.key(test['status_id']) == status }.compact }.delete_if { |_, value| value.empty? }) } }
+      { plan.name => plan.entries.inject({}) { |a, e| a.merge!({ e.name => e.runs.first.get_tests.filter_map { |test| test['title'] if TestrailResult::RESULT_STATUSES.key(test['status_id']) == status } }.delete_if { |_, value| value.empty? }) } }
     end
 
     def self.get_runs_durations
@@ -84,7 +84,7 @@ module OnlyofficeTestrailWrapper
     end
 
     def self.check_config(*args)
-      return if @testrail_config && (@testrail_config.instance_variables & args[1..-1]) == args[1..-1]
+      return if @testrail_config && (@testrail_config.instance_variables & args[1..]) == args[1..]
 
       raise "Method: #{args.shift} - some of needed parameters are missing: #{args.join(', ')}. To configure them, type:\n
              TestrailTools.configure do |config|\n\t\tconfig.param_name = value\n\tend"
