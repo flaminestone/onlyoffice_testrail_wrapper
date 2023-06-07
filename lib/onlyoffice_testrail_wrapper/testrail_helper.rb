@@ -15,15 +15,11 @@ module OnlyofficeTestrailWrapper
     include RubyHelper
     include TestrailHelperRspecMetadata
     attr_reader :project, :plan, :suite, :run
-    attr_accessor :add_all_suites, :suites_to_add, :in_debug, :version
+    attr_accessor :add_all_suites, :suites_to_add, :in_debug, :version, :suite_filter
 
-    def initialize(project_name, suite_name = nil, plan_name = nil, run_name = nil)
-      @in_debug = debug?
-      begin
-        @bugzilla_helper = OnlyofficeBugzillaHelper::BugzillaHelper.new
-      rescue Errno::ENOENT
-        @bugzilla_helper = nil
-      end
+    def initialize(project_name, suite_name = nil, plan_name = nil, run_name = nil, milestone_name = nil)
+      # @in_debug = debug?
+      @in_debug = false
       if @in_debug
         OnlyofficeLoggerHelper.log 'Do not initialize Testrail, because spec run in debug'
         @run = TestrailRun.new
@@ -34,9 +30,12 @@ module OnlyofficeTestrailWrapper
       @add_all_suites = true
       yield(self) if block_given?
       @project = Testrail2.new.project project_name.to_s.dup
+      @milestone = @project.milestone(milestone_name) if milestone_name
       if plan_name
         @plan = @project.get_plan_by_name(plan_name.to_s)
-        @plan ||= @project.create_new_plan(plan_name, suites_to_add_hash(@add_all_suites ? all_suites_names : @suites_to_add))
+        @suites_to_add = all_suites_names.grep(suite_filter) if suite_filter
+        suites = suites_to_add_hash(@add_all_suites ? all_suites_names : @suites_to_add)
+        @plan ||= @project.create_new_plan(plan_name, suites, '', @milestone&.id)
       end
       return if suite_name.nil?
 
@@ -64,7 +63,7 @@ module OnlyofficeTestrailWrapper
       @suite = @project.get_suite_by_id @suite.id
     end
 
-    def add_result_to_test_case(example, comment = '', section_name = 'All Test Cases')
+    def add_result_to_test_case(example, comment = '', section_hierarchies: ['All Test Cases'])
       if @in_debug
         OnlyofficeLoggerHelper.log 'Do not add test result, because spec run in debug '
         return
@@ -110,7 +109,13 @@ module OnlyofficeTestrailWrapper
         custom_fields[:custom_autotest_error_line] = exception.backtrace.join("\n") unless exception.backtrace.nil?
       end
       @last_case = example.description
-      @suite.section(section_name).case(example.description).add_result @run.id, result, comment, custom_fields
+      section = nil
+      [*section_hierarchies].each do |section_name|
+        section = @suite.init_section_by_name(section_name, section&.id)
+      end
+      raise 'Error while section creating!' if section.nil?
+
+      section.case(example.description).add_result @run.id, result, comment, custom_fields
     end
 
     def get_incomplete_tests

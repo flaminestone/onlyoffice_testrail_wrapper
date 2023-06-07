@@ -19,7 +19,9 @@ module OnlyofficeTestrailWrapper
     def get_runs(filters = {})
       get_url = "index.php?/api/v2/get_runs/#{@id}"
       filters.each { |key, value| get_url += "&#{key}=#{value}" }
-      runs = Testrail2.http_get(get_url)
+      response = Testrail2.http_get(get_url)
+      runs = response['runs']
+      runs = runs.filter { |run| !run['plan_id'].nil? } if filters.key?(:plan_id)
       @runs_names = name_id_pairs(runs) if @runs_names.empty?
       runs
     end
@@ -39,9 +41,10 @@ module OnlyofficeTestrailWrapper
 
     # Get Test Run by it's name
     # @param [String] name name of test run
+    # @param [Int] plan_id id of plans for run search. Will search everything if nil
     # @return [TestRunTestRail] test run
-    def get_run_by_name(name)
-      get_runs if @runs_names.empty?
+    def get_run_by_name(name, plan_id: nil)
+      get_runs(plan_id: plan_id) if @runs_names.empty?
       @runs_names[StringHelper.warnstrip!(name)].nil? ? nil : get_run_by_id(@runs_names[name])
     end
 
@@ -58,11 +61,14 @@ module OnlyofficeTestrailWrapper
       found_run.nil? ? create_new_run(name, suite_id) : found_run
     end
 
-    def create_new_run(name, suite_id, description = '')
-      new_run = TestrailRun.new.init_from_hash(Testrail2.http_post("index.php?/api/v2/add_run/#{@id}",
-                                                                   name: StringHelper.warnstrip!(name),
-                                                                   description: description,
-                                                                   suite_id: suite_id))
+    def create_new_run(name, suite_id = nil, description = '')
+      data_hash = { name: StringHelper.warnstrip!(name),
+                    description: description,
+                    suite_id: suite_id }
+      data_hash[:suite_id] = suite_id if suite_id
+      new_run = TestrailRun.new.init_from_hash(Testrail2.http_post("index.php?/api/v2/add_run/#{@id}", data_hash))
+      raise 'Error white run creating' unless new_run.id
+
       OnlyofficeLoggerHelper.log "Created new run: #{new_run.name}"
       new_run.instance_variable_set(:@project, self)
       @runs_names[new_run.name] = new_run.id
