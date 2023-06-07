@@ -18,8 +18,7 @@ module OnlyofficeTestrailWrapper
     attr_accessor :add_all_suites, :suites_to_add, :in_debug, :version, :suite_filter
 
     def initialize(project_name, suite_name = nil, plan_name = nil, run_name = nil, milestone_name = nil)
-      # @in_debug = debug?
-      @in_debug = false
+      @in_debug = debug?
       if @in_debug
         OnlyofficeLoggerHelper.log 'Do not initialize Testrail, because spec run in debug'
         @run = TestrailRun.new
