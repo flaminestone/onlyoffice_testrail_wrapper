@@ -24,6 +24,7 @@ module OnlyofficeTestrailWrapper
         @run = TestrailRun.new
         return
       end
+
       OnlyofficeLoggerHelper.log 'Begin initializing Testrail...'
       @suites_to_add = []
       @add_all_suites = true
