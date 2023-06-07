@@ -118,7 +118,8 @@ module OnlyofficeTestrailWrapper
     # Get all projects on testrail
     # @return [Array, ProjectTestrail] array of projects
     def get_projects
-      projects = Testrail2.http_get 'index.php?/api/v2/get_projects'
+      response = Testrail2.http_get 'index.php?/api/v2/get_projects'
+      projects = response['projects']
       @projects_names = name_id_pairs(projects) if @projects_names.empty?
       projects
     end
