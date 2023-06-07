@@ -76,7 +76,8 @@ module OnlyofficeTestrailWrapper
     # Get all sections in test suite
     # @return [Array, TestrailSuite] array with sections
     def get_sections
-      sections = Testrail2.http_get("index.php?/api/v2/get_sections/#{@project_id}&suite_id=#{@id}")
+      response = Testrail2.http_get("index.php?/api/v2/get_sections/#{@project_id}&suite_id=#{@id}")
+      sections = response['sections']
       @sections_names = name_id_pairs(sections) if @sections_names.nil?
       sections
     end
