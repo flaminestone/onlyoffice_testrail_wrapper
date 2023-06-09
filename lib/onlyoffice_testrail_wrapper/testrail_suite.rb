@@ -46,12 +46,12 @@ module OnlyofficeTestrailWrapper
                                                          suite_id: @id))
     end
 
-    def section(name_or_id = 'All Test Cases')
+    def section(name_or_id = 'All Test Cases', parent_section: nil)
       case name_or_id.class.to_s
       when 'Fixnum'
         get_section_by_id name_or_id
       when 'String'
-        init_section_by_name name_or_id
+        init_section_by_name name_or_id, parent_section
       else
         raise 'Wrong argument. Must be name [String] or id [Integer]'
       end

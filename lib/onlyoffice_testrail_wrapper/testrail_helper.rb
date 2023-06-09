@@ -18,7 +18,8 @@ module OnlyofficeTestrailWrapper
     attr_accessor :add_all_suites, :suites_to_add, :in_debug, :version, :suite_filter
 
     def initialize(project_name, suite_name = nil, plan_name = nil, run_name = nil, milestone_name = nil)
-      @in_debug = debug?
+      # @in_debug = debug?
+      @in_debug = false
       if @in_debug
         OnlyofficeLoggerHelper.log 'Do not initialize Testrail, because spec run in debug'
         @run = TestrailRun.new
@@ -27,9 +28,10 @@ module OnlyofficeTestrailWrapper
 
       OnlyofficeLoggerHelper.log 'Begin initializing Testrail...'
       @suites_to_add = []
+      @all_sections = {}
       @add_all_suites = true
       yield(self) if block_given?
-      @project = Testrail2.new.project project_name.to_s.dup
+      @project = Testrail2.new.project project_name
       @milestone = @project.milestone(milestone_name) if milestone_name
       if plan_name
         @plan = @project.get_plan_by_name(plan_name.to_s)
@@ -63,11 +65,14 @@ module OnlyofficeTestrailWrapper
       @suite = @project.get_suite_by_id @suite.id
     end
 
-    def add_result_to_test_case(example, comment = '', section_hierarchies: ['All Test Cases'])
+    def add_result_to_test_case(example, comment = '', section_hierarchies: ['All Test Cases'], suite_name: nil)
+      section_hierarchies = [*section_hierarchies]
       if @in_debug
         OnlyofficeLoggerHelper.log 'Do not add test result, because spec run in debug '
         return
       end
+      raise 'Do not know where to add result' unless suite_name || @run
+
       exception = example.exception
       custom_fields = init_custom_fields(example)
       if example.pending
@@ -109,12 +114,20 @@ module OnlyofficeTestrailWrapper
         custom_fields[:custom_autotest_error_line] = exception.backtrace.join("\n") unless exception.backtrace.nil?
       end
       @last_case = example.description
-      section = nil
-      [*section_hierarchies].each do |section_name|
-        section = @suite.init_section_by_name(section_name, section&.id)
-      end
-      raise 'Error while section creating!' if section.nil?
+      @suite = @project.suite(suite_name) unless @suite&.name == suite_name
+      current_cache = @all_sections
 
+      section_hierarchies.each do |section_name|
+        if current_cache[section_name]
+          current_cache = current_cache[section_name]
+        else
+          section = @suite.section section_name, parent_section: current_cache[:section]&.id
+          current_cache[section_name] = {section: section}
+          current_cache = current_cache[section_name]
+        end
+      end
+      section = current_cache[:section]
+      init_run_in_plan(suite_name.to_s)
       section.case(example.description).add_result @run.id, result, comment, custom_fields
     end
 
