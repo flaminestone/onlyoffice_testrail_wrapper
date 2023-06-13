@@ -64,18 +64,10 @@ module OnlyofficeTestrailWrapper
     private
 
     # divide example to [sections] and test
-    def parse_example(example, max_deep_lvl = 10)
-      lvls = []
-      currect_lvl = example.metadata
-      10.times do |i|
-        lvls << currect_lvl[:description]
-        break unless currect_lvl[:example_group]
-        currect_lvl = currect_lvl[:example_group]
-        raise "LVL of subsections is too deep! Limit: #{max_deep_lvl}" if i > max_deep_lvl
-      end
-      *subsections, test = lvls.reverse
-
-      [subsections, test]
+    def parse_example(example)
+      test_name = example.metadata[:description]
+      subsections = example.example_group.parent_groups.map(&:description).reverse
+      [subsections, test_name]
     end
 
     def init_run_in_plan(run_name)
