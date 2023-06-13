@@ -43,8 +43,11 @@ module OnlyofficeTestrailWrapper
     # @param [String] name name of test run
     # @param [Int] plan_id id of plans for run search. Will search everything if nil
     # @return [TestRunTestRail] test run
-    def get_run_by_name(name, plan_id: nil)
-      get_runs(plan_id: plan_id) if @runs_names.empty?
+    def get_run_by_name(name, plan_id: nil, milestone_id: nil)
+      filter = {}
+      filter[:plan_id] = plan_id if plan_id
+      filter[:milestone_id] = milestone_id if milestone_id
+      get_runs(filter) if @runs_names.empty?
       @runs_names[StringHelper.warnstrip!(name)].nil? ? nil : get_run_by_id(@runs_names[name])
     end
 
@@ -55,16 +58,17 @@ module OnlyofficeTestrailWrapper
       run
     end
 
-    def init_run_by_name(name, suite_id = nil)
-      found_run = get_run_by_name name
+    def init_run_by_name(name, suite_id = nil, milestone_id: nil)
+      found_run = get_run_by_name(name, milestone_id: milestone_id)
       suite_id = get_suite_by_name(name).id if suite_id.nil?
-      found_run.nil? ? create_new_run(name, suite_id) : found_run
+      found_run.nil? ? create_new_run(name, suite_id, milestone_id: milestone_id) : found_run
     end
 
-    def create_new_run(name, suite_id = nil, description = '')
+    def create_new_run(name, suite_id = nil, description = '', milestone_id: nil)
       data_hash = { name: StringHelper.warnstrip!(name),
                     description: description,
                     suite_id: suite_id }
+      data_hash[:milestone_id] = milestone_id if milestone_id
       data_hash[:suite_id] = suite_id if suite_id
       new_run = TestrailRun.new.init_from_hash(Testrail2.http_post("index.php?/api/v2/add_run/#{@id}", data_hash))
       raise 'Error white run creating' unless new_run.id

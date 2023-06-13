@@ -76,8 +76,14 @@ module OnlyofficeTestrailWrapper
     # Get all sections in test suite
     # @return [Array, TestrailSuite] array with sections
     def get_sections
-      response = Testrail2.http_get("index.php?/api/v2/get_sections/#{@project_id}&suite_id=#{@id}")
-      sections = response['sections']
+      max_chanks_count = 4 # (250 is limit for one request)
+      max_section_limit = 250
+      sections = []
+      max_chanks_count.times do |offset|
+        response = Testrail2.http_get("index.php?/api/v2/get_sections/#{@project_id}&suite_id=#{@id}&offset=#{offset * max_section_limit}")
+        sections += response['sections']
+        break if response['sections'].count < max_section_limit
+      end
       @sections_names = name_id_pairs(sections) if @sections_names.nil?
       sections
     end
