@@ -59,6 +59,7 @@ module OnlyofficeTestrailWrapper
 
       result, comment = get_result_from_example(example, comment)
       section.case(test_name).add_result @run.id, result, comment
+      @last_case = example.full_description
     end
 
     private
@@ -88,7 +89,6 @@ module OnlyofficeTestrailWrapper
     end
 
     def get_result_from_example(example, comment)
-      @last_case = example.full_description
       exception = example.exception
       if example.pending
         comment += example.execution_result.pending_message
