@@ -100,6 +100,30 @@ module OnlyofficeTestrailWrapper
 
         JSON.parse response.body
       end
+
+      # Perform http post on address
+      # @param [String] request_url to perform http get
+      # @param [String] file_path for sending in request
+      # @return [Hash] Json with result data in hash form
+      def http_post_multipart_data(request_url, file_path)
+        uri = URI get_testrail_address + request_url
+        request = Net::HTTP::Post.new uri.request_uri
+
+        boundary = 'TestRailAPIAttachmentBoundary'
+        post_body = []
+        post_body << "--#{boundary}\r\n"
+        post_body << "Content-Disposition: form-data; name=\"attachment\"; filename=\"#{File.basename(file_path)}\"\r\n"
+        post_body << "\r\n"
+        post_body << File.binread(file_path)
+        post_body << "\r\n--#{boundary}--\r\n"
+
+        request.body = post_body.join
+        request['Content-Type'] = "multipart/form-data; boundary=#{boundary}"
+        response = send_request_multipart_data(uri, request)
+        return if response.body == ''
+
+        JSON.parse response.body
+      end
     end
 
     # region PROJECT
@@ -167,6 +191,25 @@ module OnlyofficeTestrailWrapper
     end
 
     # endregion
+
+    def self.send_request_multipart_data(uri, request)
+      request.basic_auth admin_user, admin_pass
+      is_ssl = (uri.scheme == 'https')
+      Net::HTTP.start(uri.host, uri.port, use_ssl: is_ssl) do |http|
+        attempts = 0
+        begin
+          response = http.request(request)
+        rescue Timeout::Error
+          attempts += 1
+          retry if attempts < 3
+          raise 'Timeout error after 3 attempts'
+        rescue StandardError => e
+          raise e
+        end
+        return response
+      end
+    end
+
 
     def self.send_request(uri, request)
       request.basic_auth admin_user, admin_pass

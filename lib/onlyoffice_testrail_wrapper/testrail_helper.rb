@@ -41,7 +41,7 @@ module OnlyofficeTestrailWrapper
       @run.get_tests.filter_map { |test| test['title'] if test['status_id'] == 3 || test['status_id'] == 4 }
     end
 
-    def add_result(example, comment = '')
+    def add_result(example, comment: '', screenshot_path: nil)
       sections, test_name = parse_example(example)
 
       current_cache = @all_sections
@@ -61,7 +61,8 @@ module OnlyofficeTestrailWrapper
       time = Time.now - example.execution_result.started_at
       custom_fields = { elapsed: format_elapsed_time(time) }
 
-      section.case(test_name).add_result @run.id, result, comment, custom_fields
+      result = section.case(test_name).add_result @run.id, result, comment, custom_fields
+      result.add_attachment(screenshot_path) if screenshot_path
       @last_case = example.full_description
     end
 

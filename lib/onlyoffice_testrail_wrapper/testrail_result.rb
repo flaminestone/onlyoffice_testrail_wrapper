@@ -36,6 +36,10 @@ module OnlyofficeTestrailWrapper
       @error = nil
     end
 
+    def add_attachment(filepath)
+      Testrail2.http_post_multipart_data("index.php?/api/v2/add_attachment_to_result/#{@id}", filepath)
+    end
+
     # Add result of test result
     # @param [Integer] status id of status to set
     # @param [String] comment comment of result
