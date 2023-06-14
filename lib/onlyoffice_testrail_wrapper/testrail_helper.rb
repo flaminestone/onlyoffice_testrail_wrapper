@@ -58,7 +58,10 @@ module OnlyofficeTestrailWrapper
       section = current_cache[:section]
 
       result, comment = get_result_from_example(example, comment)
-      section.case(test_name).add_result @run.id, result, comment
+      time = Time.now - example.execution_result.started_at
+      custom_fields = { elapsed: format_elapsed_time(time) }
+
+      section.case(test_name).add_result @run.id, result, comment, custom_fields
       @last_case = example.full_description
     end
 
@@ -117,6 +120,18 @@ module OnlyofficeTestrailWrapper
         comment += "\n#{exception}"
       end
       [result, comment]
+    end
+
+    def format_elapsed_time(seconds)
+      seconds = seconds.round
+      minutes = seconds / 60
+      seconds %= 60
+
+      if minutes.zero?
+        "#{seconds}s"
+      else
+        "#{minutes}m #{seconds}s"
+      end
     end
   end
 end
