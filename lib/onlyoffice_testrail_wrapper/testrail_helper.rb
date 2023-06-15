@@ -60,7 +60,10 @@ module OnlyofficeTestrailWrapper
       time = Time.now - example.execution_result.started_at
       custom_fields = { elapsed: format_elapsed_time(time) }
 
-      result = section.case(test_name).add_result @run.id, result, comment, custom_fields
+      current_case = section.case(test_name)
+      current_example_type_id = example_type(example)
+      current_case.update(current_case.title, current_example_type_id, current_case.priority_id) if current_case.type_id != current_example_type_id
+      result = current_case.add_result @run.id, result, comment, custom_fields
       result.add_attachment(screenshot_path) if screenshot_path
       @last_case = example.full_description
     end
@@ -72,6 +75,13 @@ module OnlyofficeTestrailWrapper
       test_name = example.metadata[:description]
       subsections = example.example_group.parent_groups.map(&:description).reverse
       [subsections, test_name]
+    end
+
+    # return id of current autotest relative of id in type case in testrail
+    def example_type(example)
+      return 11 if example.metadata[:smoke]
+
+      3 # default type
     end
 
     def init_run_in_plan(run_name)
@@ -123,7 +133,7 @@ module OnlyofficeTestrailWrapper
     end
 
     def format_elapsed_time(seconds)
-      seconds = seconds.round
+      seconds = seconds.ceil
       minutes = seconds / 60
       seconds %= 60
 
