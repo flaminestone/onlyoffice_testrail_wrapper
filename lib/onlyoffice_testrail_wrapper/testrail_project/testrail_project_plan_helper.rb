@@ -81,7 +81,6 @@ module OnlyofficeTestrailWrapper
                                                                      description: description,
                                                                      milestone_id: milestone_id,
                                                                      entries: entries))
-      @suite
       OnlyofficeLoggerHelper.log "Created new plan: #{new_plan.name}"
       new_plan.entries.each_with_index do |entry, i|
         new_plan.entries[i] = TestrailPlanEntry.new.init_from_hash(entry)

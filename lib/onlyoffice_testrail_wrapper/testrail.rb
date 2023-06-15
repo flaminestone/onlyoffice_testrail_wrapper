@@ -210,7 +210,6 @@ module OnlyofficeTestrailWrapper
       end
     end
 
-
     def self.send_request(uri, request)
       request.basic_auth admin_user, admin_pass
       request.delete 'content-type'
