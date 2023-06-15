@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'onlyoffice_bugzilla_helper'
 require_relative 'testrail_helper/testrail_helper_rspec_metadata'
 require_relative 'testrail_helper/example_failed_got_expected_exception'
 require_relative 'testrail_helper/example_lpv_exception'
