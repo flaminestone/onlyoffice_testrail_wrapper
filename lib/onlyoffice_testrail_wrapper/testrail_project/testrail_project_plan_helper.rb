@@ -53,7 +53,8 @@ module OnlyofficeTestrailWrapper
     def get_plans(filters = {})
       get_url = "index.php?/api/v2/get_plans/#{@id}"
       filters.each { |key, value| get_url += "&#{key}=#{value}" }
-      plans = Testrail2.http_get(get_url)
+      response = Testrail2.http_get(get_url)
+      plans = response['plans']
       @plans_names = name_id_pairs(plans) if @plans_names.empty?
       plans
     end

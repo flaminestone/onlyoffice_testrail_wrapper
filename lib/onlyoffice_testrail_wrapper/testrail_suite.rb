@@ -46,12 +46,12 @@ module OnlyofficeTestrailWrapper
                                                          suite_id: @id))
     end
 
-    def section(name_or_id = 'All Test Cases')
+    def section(name_or_id = 'All Test Cases', parent_section: nil)
       case name_or_id.class.to_s
       when 'Fixnum'
         get_section_by_id name_or_id
       when 'String'
-        init_section_by_name name_or_id
+        init_section_by_name name_or_id, parent_section
       else
         raise 'Wrong argument. Must be name [String] or id [Integer]'
       end
@@ -76,7 +76,14 @@ module OnlyofficeTestrailWrapper
     # Get all sections in test suite
     # @return [Array, TestrailSuite] array with sections
     def get_sections
-      sections = Testrail2.http_get("index.php?/api/v2/get_sections/#{@project_id}&suite_id=#{@id}")
+      max_chanks_count = 4 # (250 is limit for one request)
+      max_section_limit = 250
+      sections = []
+      max_chanks_count.times do |offset|
+        response = Testrail2.http_get("index.php?/api/v2/get_sections/#{@project_id}&suite_id=#{@id}&offset=#{offset * max_section_limit}")
+        sections += response['sections']
+        break if response['sections'].count < max_section_limit
+      end
       @sections_names = name_id_pairs(sections) if @sections_names.nil?
       sections
     end

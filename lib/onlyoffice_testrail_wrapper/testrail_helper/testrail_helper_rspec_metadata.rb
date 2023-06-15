@@ -40,16 +40,5 @@ module OnlyofficeTestrailWrapper
 
       ''
     end
-
-    def parse_pending_comment(pending_message)
-      return [:pending, 'There is problem with initialization of @bugzilla_helper', nil] if @bugzilla_helper.nil?
-
-      bug_id = @bugzilla_helper.bug_id_from_string(pending_message)
-      return [:pending, pending_message] if bug_id.nil?
-
-      bug_status = @bugzilla_helper.bug_status(bug_id)
-      status = bug_status.include?('VERIFIED') ? :failed : :pending
-      [status, "#{pending_message}\nBug has status: #{bug_status}, test was failed", bug_id]
-    end
   end
 end
