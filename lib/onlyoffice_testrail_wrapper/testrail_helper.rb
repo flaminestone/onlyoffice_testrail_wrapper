@@ -104,7 +104,7 @@ module OnlyofficeTestrailWrapper
 
     def get_result_from_example(example, comment)
       exception = example.exception
-      issue = example.metadata[:issue]
+      issue = example.metadata[:defects]
       if example.pending
         comment += example.execution_result.pending_message
         result = :pending
