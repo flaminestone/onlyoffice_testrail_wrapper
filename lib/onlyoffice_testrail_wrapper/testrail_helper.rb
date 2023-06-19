@@ -56,9 +56,10 @@ module OnlyofficeTestrailWrapper
       end
       section = current_cache[:section]
 
-      result, comment = get_result_from_example(example, comment)
+      result, comment, issue = get_result_from_example(example, comment)
       time = Time.now - example.execution_result.started_at
-      custom_fields = { elapsed: format_elapsed_time(time) }
+      custom_fields = { elapsed: format_elapsed_time(time),
+                        defects: issue }
 
       current_case = section.case(test_name)
       current_example_type_id = example_type(example)
@@ -103,6 +104,7 @@ module OnlyofficeTestrailWrapper
 
     def get_result_from_example(example, comment)
       exception = example.exception
+      issue = example.metadata[:defects]
       if example.pending
         comment += example.execution_result.pending_message
         result = :pending
@@ -129,7 +131,7 @@ module OnlyofficeTestrailWrapper
         result = :aborted
         comment += "\n#{exception}"
       end
-      [result, comment]
+      [result, comment, issue]
     end
 
     def format_elapsed_time(seconds)
