@@ -62,8 +62,7 @@ module OnlyofficeTestrailWrapper
                         defects: issue }
 
       current_case = section.case(test_name)
-      current_example_type_id = example_type(example)
-      current_case.update(current_case.title, current_example_type_id, current_case.priority_id) if current_case.type_id != current_example_type_id
+      update_case_if_needed(example, current_case)
       result = current_case.add_result @run.id, result, comment, custom_fields
       result.add_attachment(screenshot_path) if screenshot_path
       @last_case = example.full_description
@@ -83,6 +82,17 @@ module OnlyofficeTestrailWrapper
       return 11 if example.metadata[:smoke]
 
       3 # default type
+    end
+
+    def example_refs(example)
+      example.metadata[:refs]
+    end
+
+    def update_case_if_needed(example, current_case)
+      type_id = example_type(example)
+      refs = example_refs(example)
+      cases_is_same = (current_case.type_id == type_id) && (current_case.refs == refs)
+      current_case.update(current_case.title, type_id, current_case.priority_id, nil, refs) unless cases_is_same
     end
 
     def init_run_in_plan(run_name)

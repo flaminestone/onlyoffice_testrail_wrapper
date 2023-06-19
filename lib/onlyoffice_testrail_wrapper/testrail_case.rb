@@ -16,6 +16,8 @@ module OnlyofficeTestrailWrapper
     attr_accessor :custom_steps
     # @return [String] Estimated test time
     attr_accessor :estimate
+    # @return [String] A comma-separated list of references/requirements
+    attr_accessor :refs
 
     # Default constructor
     # @param [String] title name of test case, default = nil
@@ -33,14 +35,16 @@ module OnlyofficeTestrailWrapper
       @custom_steps = custom_steps
     end
 
-    def update(title = @title, type_id = @type_id, priority_id = @priority_id, custom_steps = @custom_steps)
+    def update(title = @title, type_id = @type_id, priority_id = @priority_id, custom_steps = @custom_steps, refs = nil)
       @section.cases_names.delete @title
       @section.cases_names[StringHelper.warnstrip!(title.to_s)] = @id
-      TestrailCase.new.init_from_hash(Testrail2.http_post("index.php?/api/v2/update_case/#{@id}",
-                                                          title: title,
-                                                          type_id: type_id,
-                                                          priority_id: priority_id,
-                                                          custom_steps: custom_steps))
+      params = { title: title,
+                 type_id: type_id,
+                 priority_id: priority_id,
+                 custom_steps: custom_steps,
+                 refs: refs }
+      params[:refs] = refs if refs
+      TestrailCase.new.init_from_hash(Testrail2.http_post("index.php?/api/v2/update_case/#{@id}", params))
     end
 
     def delete
