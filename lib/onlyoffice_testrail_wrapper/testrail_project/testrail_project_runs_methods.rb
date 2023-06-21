@@ -58,18 +58,20 @@ module OnlyofficeTestrailWrapper
       run
     end
 
-    def init_run_by_name(name, suite_id = nil, milestone_id: nil)
+    def init_run_by_name(name, suite_id = nil, milestone_id: nil, case_ids: nil)
       found_run = get_run_by_name(name, milestone_id: milestone_id)
       suite_id = get_suite_by_name(name).id if suite_id.nil?
-      found_run.nil? ? create_new_run(name, suite_id, milestone_id: milestone_id) : found_run
+      found_run.nil? ? create_new_run(name, suite_id, milestone_id: milestone_id, case_ids: case_ids) : found_run
     end
 
-    def create_new_run(name, suite_id = nil, description = '', milestone_id: nil)
+    def create_new_run(name, suite_id = nil, milestone_id: nil, case_ids: nil)
       data_hash = { name: StringHelper.warnstrip!(name),
-                    description: description,
+                    description: '',
                     suite_id: suite_id }
+      data_hash[:include_all] = case_ids.nil?
       data_hash[:milestone_id] = milestone_id if milestone_id
       data_hash[:suite_id] = suite_id if suite_id
+      data_hash[:case_ids] = case_ids if case_ids
       new_run = TestrailRun.new.init_from_hash(Testrail2.http_post("index.php?/api/v2/add_run/#{@id}", data_hash))
       raise 'Error white run creating' unless new_run.id
 
