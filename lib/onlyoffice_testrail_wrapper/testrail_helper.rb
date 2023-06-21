@@ -14,7 +14,7 @@ module OnlyofficeTestrailWrapper
     include RubyHelper
     include TestrailHelperRspecMetadata
     attr_reader :project, :plan, :suite, :run
-    attr_accessor :add_all_suites, :suites_to_add, :in_debug, :version, :suite_filter
+    attr_accessor :add_all_suites, :suites_to_add, :case_ids, :in_debug, :version, :suite_filter
 
     def initialize(project_name, run_name = nil, milestone_name = nil, suite_name = nil)
       @in_debug = debug?
@@ -26,13 +26,14 @@ module OnlyofficeTestrailWrapper
       end
 
       OnlyofficeLoggerHelper.log 'Begin initializing Testrail...'
-      yield(self) if block_given?
       @project = Testrail2.new.project project_name
       @milestone = @project&.milestone(milestone_name) if milestone_name
       @all_sections = {}
 
       @suite = @project.suite(suite_name)
-      @run = @project.init_run_by_name(run_name, @suite.id, milestone_id: @milestone&.id)
+      @case_ids = nil
+      yield(self) if block_given?
+      @run = @project.init_run_by_name(run_name, @suite.id, milestone_id: @milestone&.id, case_ids: case_ids)
       OnlyofficeLoggerHelper.log 'Initializing complete!'
     end
 

@@ -6,6 +6,7 @@ require_relative 'testrail_plan'
 require_relative 'testrail_milestone'
 require_relative 'testrail_project/project_cleanup'
 require_relative 'testrail_project/testrail_project_milestone_methods'
+require_relative 'testrail_project/testrail_project_case_type_methods'
 require_relative 'testrail_project/testrail_project_plan_helper'
 require_relative 'testrail_project/testrail_project_runs_methods'
 require_relative 'testrail_project/testrail_project_suite_methods'
@@ -16,6 +17,7 @@ module OnlyofficeTestrailWrapper
   class TestrailProject < TestrailApiObject
     include ProjectCleanup
     include TestrailProjectMilestoneMethods
+    include TestrailProjectCaseTypeMethods
     include TestrailProjectPlanHelper
     include TestrailProjectRunMethods
     include TestrailProjectSuiteMethods
@@ -59,6 +61,7 @@ module OnlyofficeTestrailWrapper
       @runs_names = {}
       @plans_names = {}
       @milestones_names = {}
+      @case_types = {}
     end
 
     def update(is_completed = false, name = @name, announcement = @announcement, show_announcement = @show_announcement)

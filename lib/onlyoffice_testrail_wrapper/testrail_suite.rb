@@ -100,6 +100,22 @@ module OnlyofficeTestrailWrapper
       @sections_names[StringHelper.warnstrip!(name.to_s)].nil? ? nil : get_section_by_id(@sections_names[name])
     end
 
+    # Get all cases of suite
+    # @return [Array, TestCaseTestrail] array of test cases
+    def get_cases(case_type: nil)
+      type_id = @project.case_type(case_type) if case_type.is_a? String
+
+      max_chunks_count = 40 # (250 is limit for one request)
+      max_cases_limit = 250
+      cases = []
+      max_chunks_count.times do |offset|
+        response = Testrail2.http_get("index.php?/api/v2/get_cases/#{@project_id}&suite_id=#{@id}&type_id=#{type_id}&offset=#{offset * max_cases_limit}")
+        cases += response['cases']
+        break if response['cases'].count < max_cases_limit
+      end
+      cases.map { |current_case| TestrailCase.new.init_from_hash current_case }
+    end
+
     # Init section by it's name
     # @param [String] name name of section
     # @return [TestrailSection] Section with this name
