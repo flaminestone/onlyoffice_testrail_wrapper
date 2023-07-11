@@ -144,6 +144,7 @@ module OnlyofficeTestrailWrapper
     def get_projects
       response = Testrail2.http_get 'index.php?/api/v2/get_projects'
       projects = response['projects']
+      OnlyofficeLoggerHelper.log "Error: #{response}" if projects.nil?
       @projects_names = name_id_pairs(projects) if @projects_names.empty?
       projects
     end
