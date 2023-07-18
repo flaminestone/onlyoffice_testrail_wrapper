@@ -5,7 +5,7 @@ module OnlyofficeTestrailWrapper
   module TestrailProjectRunMethods
     def test_run(name_or_id)
       case name_or_id.class.to_s
-      when 'Fixnum'
+      when 'Integer'
         get_run_by_id name_or_id
       when 'String'
         init_run_by_name name_or_id
