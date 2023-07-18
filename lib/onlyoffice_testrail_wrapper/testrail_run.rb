@@ -95,7 +95,14 @@ module OnlyofficeTestrailWrapper
     # Get all tests
     # @return [Array, TestCaseTestrail] array of test cases
     def get_tests
-      tests = Testrail2.http_get "index.php?/api/v2/get_tests/#{@id}"
+      max_chanks_count = 15 # (250 is limit for one request)
+      max_tests_limit = 250
+      tests = []
+      max_chanks_count.times do |offset|
+        response = Testrail2.http_get("index.php?/api/v2/get_tests/#{@id}&offset=#{offset * max_tests_limit}")
+        tests += response['tests']
+        break if response['tests'].count < max_tests_limit
+      end
       @tests_names = name_id_pairs(tests, 'title') if @tests_names.empty?
       tests
     end
