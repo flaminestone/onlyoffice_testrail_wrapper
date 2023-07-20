@@ -89,11 +89,17 @@ module OnlyofficeTestrailWrapper
       example.metadata[:refs]
     end
 
+    def example_location(example)
+      example.metadata[:location]
+    end
+
     def update_case_if_needed(example, current_case)
       type_id = example_type(example)
       refs = example_refs(example)
-      cases_is_same = (current_case.type_id == type_id) && (current_case.refs == refs)
-      current_case.update(current_case.title, type_id, current_case.priority_id, nil, refs) unless cases_is_same
+      location = example_location(example)
+      cases_is_same = (current_case.type_id == type_id) && (current_case.refs == refs) && (current_case.custom_location == location)
+      params = { type_id: type_id, refs: refs, location: location }
+      current_case.update(params) unless cases_is_same
     end
 
     def init_run_in_plan(run_name)
