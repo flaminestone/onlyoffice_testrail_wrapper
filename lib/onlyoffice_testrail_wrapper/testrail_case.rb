@@ -18,6 +18,8 @@ module OnlyofficeTestrailWrapper
     attr_accessor :estimate
     # @return [String] A comma-separated list of references/requirements
     attr_accessor :refs
+    # @return [String] A relative path to test location (like ./spec/test_spec.rb:5)
+    attr_accessor :custom_location
 
     # Default constructor
     # @param [String] title name of test case, default = nil
@@ -35,15 +37,16 @@ module OnlyofficeTestrailWrapper
       @custom_steps = custom_steps
     end
 
-    def update(title = @title, type_id = @type_id, priority_id = @priority_id, custom_steps = @custom_steps, refs = nil)
+    # @param [Hash] params can contain keys title, type_id, priority_id, custom_steps, refs, location
+    def update(params)
       @section.cases_names.delete @title
       @section.cases_names[StringHelper.warnstrip!(title.to_s)] = @id
-      params = { title: title,
-                 type_id: type_id,
-                 priority_id: priority_id,
-                 custom_steps: custom_steps,
-                 refs: refs }
-      params[:refs] = refs if refs
+      params = { title: params[:title] || @title,
+                 type_id: params[:type_id] || @type_id,
+                 priority_id: params[:priority_id] || @priority_id,
+                 custom_steps: params[:custom_steps] || @custom_steps,
+                 refs: params[:refs],
+                 custom_location: params[:location] }
       TestrailCase.new.init_from_hash(Testrail2.http_post("index.php?/api/v2/update_case/#{@id}", params))
     end
 
