@@ -39,14 +39,15 @@ module OnlyofficeTestrailWrapper
 
     # @param [Hash] params can contain keys title, type_id, priority_id, custom_steps, refs, location
     def update(params)
-      @section.cases_names.delete @title
-      @section.cases_names[StringHelper.warnstrip!(title.to_s)] = @id
+      # @section.cases_names.delete @title
+      # @section.cases_names[StringHelper.warnstrip!(title.to_s)] = @id
       params = { title: params[:title] || @title,
                  type_id: params[:type_id] || @type_id,
                  priority_id: params[:priority_id] || @priority_id,
                  custom_steps: params[:custom_steps] || @custom_steps,
-                 refs: params[:refs],
-                 custom_location: params[:location] }
+                 template_id: 2,
+                 custom_preconds: params[:custom_preconds] || @custom_preconds,
+                 custom_steps_separated: params[:custom_steps_separated]}
       TestrailCase.new.init_from_hash(Testrail2.http_post("index.php?/api/v2/update_case/#{@id}", params))
     end
 
