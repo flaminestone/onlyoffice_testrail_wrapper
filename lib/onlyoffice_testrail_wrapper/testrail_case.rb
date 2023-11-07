@@ -64,11 +64,16 @@ module OnlyofficeTestrailWrapper
     end
 
     def add_result(run_id, result, comment = '', custom_fields = {}, version = '')
-      response = TestrailResult.new.init_from_hash(Testrail2.http_post("index.php?/api/v2/add_result_for_case/#{run_id}/#{@id}",
-                                                                       { status_id: TestrailResult::RESULT_STATUSES[result],
-                                                                         comment: comment,
-                                                                         version: version }.merge(custom_fields)))
+      row = Testrail2.http_post("index.php?/api/v2/add_result_for_case/#{run_id}/#{@id}",
+                                { status_id: TestrailResult::RESULT_STATUSES[result],
+                                  comment: comment,
+                                  version: version }.merge(custom_fields))
+      response = TestrailResult.new.init_from_hash(row)
       OnlyofficeLoggerHelper.log "Set test case result: #{result}. URL: #{Testrail2.get_testrail_address}index.php?/tests/view/#{response.test_id}", output_colors[result]
+      if response&.test_id.nil?
+        OnlyofficeLoggerHelper.log row.to_s
+        p row.to_s
+      end
       response
     end
 
