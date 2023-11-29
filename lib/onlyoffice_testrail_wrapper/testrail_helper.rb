@@ -30,10 +30,10 @@ module OnlyofficeTestrailWrapper
       @milestone = @project&.milestone(milestone_name) if milestone_name
       @all_sections = {}
 
-      @suite = @project.suite(suite_name)
+      @suite = @project.suite(suite_name) if suite_name
       @case_ids = nil
       yield(self) if block_given?
-      @run = @project.init_run_by_name(run_name, @suite.id, milestone_id: @milestone&.id, case_ids: case_ids)
+      @run = @project.init_run_by_name(run_name, @suite.id, milestone_id: @milestone&.id, case_ids: case_ids) if @suite
       OnlyofficeLoggerHelper.log 'Initializing complete!'
     end
 
