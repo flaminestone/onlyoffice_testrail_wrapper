@@ -20,6 +20,7 @@ module OnlyofficeTestrailWrapper
     attr_accessor :refs
     # @return [String] A relative path to test location (like ./spec/test_spec.rb:5)
     attr_accessor :custom_location
+    attr_accessor :custom_automated
 
     # Default constructor
     # @param [String] title name of test case, default = nil
