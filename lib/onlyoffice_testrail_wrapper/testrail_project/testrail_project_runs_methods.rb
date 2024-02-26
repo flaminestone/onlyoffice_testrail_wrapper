@@ -61,7 +61,7 @@ module OnlyofficeTestrailWrapper
     def init_run_by_name(name, suite_id = nil, milestone_id: nil, case_ids: nil)
       found_run = get_run_by_name(name, milestone_id: milestone_id)
       suite_id = get_suite_by_name(name).id if suite_id.nil?
-      found_run.nil? ? create_new_run(name, suite_id, milestone_id: milestone_id, case_ids: case_ids) : found_run
+      found_run.nil? || found_run.is_completed ? create_new_run(name, suite_id, milestone_id: milestone_id, case_ids: case_ids) : found_run
     end
 
     def create_new_run(name, suite_id = nil, milestone_id: nil, case_ids: nil)
