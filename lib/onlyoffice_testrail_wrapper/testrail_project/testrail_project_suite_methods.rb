@@ -17,7 +17,8 @@ module OnlyofficeTestrailWrapper
     # Get all test suites of project
     # @return [Array<Hash>] array with suites data in hash
     def get_suites
-      suites = Testrail2.http_get("index.php?/api/v2/get_suites/#{@id}")
+      response = Testrail2.http_get("index.php?/api/v2/get_suites/#{@id}")
+      suites = response['suites']
       @suites_names = name_id_pairs(suites) if @suites_names.empty?
       suites
     end
